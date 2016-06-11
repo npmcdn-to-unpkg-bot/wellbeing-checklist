@@ -1,4 +1,3 @@
-
 # Wellbeing Checklist (wellbeing-checklist)
 
 > Manage your perception of how you feel about your health

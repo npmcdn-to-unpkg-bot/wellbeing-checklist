@@ -1,11 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Router from 'react-router';
-import { DefaultRoute, Link, Route, RouteHandler } from 'react-router';
-import ReactFire from 'reactfire';
+import {ReactFire, ReactFireMixin} from 'reactfire';
+import ReactMixin from 'react-mixin';
 import Firebase from 'firebase';
-
-
 
 // Material UI stuff
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -21,53 +18,62 @@ import AppBar from 'material-ui/AppBar';
 // https://github.com/zilverline/react-tap-event-plugin
 injectTapEventPlugin();
 
-var questions = [
-  { id: 1, text: "Do you feel like you're maintaining enough liduidity in your assets?" },
-  { id: 2, text: "Do you feel like you are living outside of your means?" },
-  { id: 3, text: "Did you feel like you weren't making any progress towards long-term capital growth?" },
-  { id: 4, text: "Do you feel like you aren't really improving your authority signalling?" },
-  { id: 5, text: "Today did you feel like you were making no meaningful progress towards improving your ability to sort through the information you receive on a daily basis?" },
-  { id: 6, text: "Did you sense of lacking control of your internal life?" },
-  { id: 7, text: "Did you feel like you're not making progress with any skills?" },
-  { id: 8, text: "Do you feel bored?" },
-  { id: 9, text: "Did you feel significantly uncomfortable in your interactions with other people today?" },
-  { id: 10, text: "Do you feel like you aren't sharing your pie?" },
-  { id: 11, text: "Did you feel significant friction in managing your life?" },
-  { id: 12, text: "Do you feel significant friction in managing your money?" },
-  { id: 13, text: "Do you feel like you're consuming stuff that is unnaturally messing with your body's physiology?" },
-  { id: 14, text: "Did you feel negative physical discomfort today?" },
-  { id: 15, text: "Did you feel like you weren't making any progress towards improving your quantification of wellbeing?" },
-  { id: 16, text: "Did you generally feel like things weren't going so well today?" },
-  { id: 17, text: "Did you feel sleep-deprived today?" }
-];
+import RadioGroup from 'react-radio-group';
 
-const App = () => (
-  <MuiThemeProvider muiTheme={getMuiTheme()}>
-    <AppContent />
-  </MuiThemeProvider>
-);
+// Configure Firebase
+var config = {
+  apiKey: "AIzaSyCbNEewyeYO1L-UI4PpU3bAkyHmKoA30NY",
+  authDomain: "wellbeing-checklist.firebaseapp.com",
+  databaseURL: "https://wellbeing-checklist.firebaseio.com",
+  storageBucket: "wellbeing-checklist.appspot.com",
+};
 
-const AppContent = () => (
-  <div class="appContent">
-    <AppBar title="Wellbeing Checklist" showMenuIconButton={false} />
-    <QuestionList />
-  </div>
-);
+Firebase.initializeApp(config);
+var database = firebase.database();
+
+var App = React.createClass({
+  render: function() {
+    return (
+      <MuiThemeProvider muiTheme={getMuiTheme()} >
+        <AppContent data={this.props.data} />
+      </MuiThemeProvider>
+    );
+  }
+});
+
+var AppContent = React.createClass({
+  render: function() {
+    return (
+      <div class="appContent">
+        <AppBar title="Wellbeing Checklist" showMenuIconButton={false} />
+        <QuestionList data={this.props.data} />
+      </div>
+    );
+  }
+});
 
 var QuestionList = React.createClass({
-  componentWillMount: function() {
-    this.firebaseRef = new Firebase("https://wellbeing-checklist.firebaseio.com/items/");
-    this.firebaseRef.on("child_added", function(dataSnapshot) {
-      this.items.push(dataSnapshot.val());
-      this.setState({
-        items: this.items
-      });
+  mixins: [ReactFireMixin],
+  getInitialState() {
+      return {
+        questions: []
+      };
+  },
+  componentWillMount() {
+    database.ref('questions').on('value', function(snapshot) {
+      var questions = [];
+      snapshot.forEach(function(childSnapshot) {
+        var question = childSnapshot.val();
+        question['.id'] = childSnapshot.id;
+        questions.push(question);
+      }.bind(this));
+      this.setState ({questions:questions});
     }.bind(this));
   },
   render: function() {
-    var questionNodes = this.props.data.map(function(question) {
+    var questionNodes = this.state.questions.map(function(question) {
       return (
-        <Question key={question.id}>
+        <Question key={question.id} id={question.id} selectedValue={question.selectedValue}>
           {question.text}
         </Question>
       )
@@ -79,27 +85,44 @@ var QuestionList = React.createClass({
     );
   }
 });
+
 var Question = React.createClass({
   render: function() {
     return (
       <Card>
         <CardHeader title={this.props.children} />
-        <QuestionButtons />
+        <QuestionButtons id={this.props.id} selectedValue={this.props.selectedValue} />
       </Card>
     );
   }
 });
+
 var QuestionButtons = React.createClass({
+  getInitialState() {
+    return {};
+  },
+  componentDidMount() {
+
+  },
+  handleChange(value) {
+    this.setState({selectedValue: value})
+  },
+  handleSubmit: function(value) {
+    value.preventDefault();
+    this.setState({selectedValue: value})
+  },
   render: function() {
     return (
-      <CardActions>
-        <FlatButton label="No"></FlatButton>
-        <FlatButton label="A bit"></FlatButton>
-        <FlatButton label="Yes"></FlatButton>
-      </CardActions>
+      <form name="questionButtons" id={this.props.id} onSubmit={this.handleSubmit}>
+        <input type="radio" name={"questionButton" + this.props.id} value="0" />No
+        <input type="radio" name={"questionButton" + this.props.id} value="0.5" />Slightly
+        <input type="radio" name={"questionButton" + this.props.id} value="1" />Yes
+        <button>Submit</button>
+      </form>
     );
   }
 });
+
 ReactDOM.render(
   <App />,
   document.getElementById('react')

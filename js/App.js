@@ -18,8 +18,6 @@ import AppBar from 'material-ui/AppBar';
 // https://github.com/zilverline/react-tap-event-plugin
 injectTapEventPlugin();
 
-import RadioGroup from 'react-radio-group';
-
 // Configure Firebase
 var config = {
   apiKey: "AIzaSyCbNEewyeYO1L-UI4PpU3bAkyHmKoA30NY",
@@ -64,10 +62,9 @@ var QuestionList = React.createClass({
       var questions = [];
       snapshot.forEach(function(childSnapshot) {
         var question = childSnapshot.val();
-        question['.id'] = childSnapshot.id;
         questions.push(question);
       }.bind(this));
-      this.setState ({questions:questions});
+      this.setState ({questions : questions});
     }.bind(this));
   },
   render: function() {
@@ -99,25 +96,23 @@ var Question = React.createClass({
 
 var QuestionButtons = React.createClass({
   getInitialState() {
-    return {};
+    return {
+      answers: ''
+    };
   },
-  componentDidMount() {
-
+  componentWillMount() {
+    this.databaseRef = database.ref('answers');
   },
-  handleChange(value) {
-    this.setState({selectedValue: value})
-  },
-  handleSubmit: function(value) {
-    value.preventDefault();
-    this.setState({selectedValue: value})
+  onChange(e) {
+    console.log(e.target.value);
+    this.databaseRef.push(e.target.value);
   },
   render: function() {
     return (
-      <form name="questionButtons" id={this.props.id} onSubmit={this.handleSubmit}>
-        <input type="radio" name={"questionButton" + this.props.id} value="0" />No
-        <input type="radio" name={"questionButton" + this.props.id} value="0.5" />Slightly
-        <input type="radio" name={"questionButton" + this.props.id} value="1" />Yes
-        <button>Submit</button>
+      <form name="questionButtons" id={this.props.id}>
+        <input type="radio" name={"questionButton" + this.props.id} value="0" onChange={this.onChange} />No
+        <input type="radio" name={"questionButton" + this.props.id} value="0.5" onChange={this.onChange} />Slightly
+        <input type="radio" name={"questionButton" + this.props.id} value="1" onChange={this.onChange} />Yes
       </form>
     );
   }

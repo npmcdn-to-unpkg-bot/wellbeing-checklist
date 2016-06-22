@@ -8,10 +8,7 @@ import Firebase from 'firebase';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import {Card, CardHeader, CardActions} from 'material-ui/Card';
-import Divider from 'material-ui/Divider';
-import FlatButton from 'material-ui/FlatButton';
-import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors';
+import {Card, CardHeader} from 'material-ui/Card';
 import AppBar from 'material-ui/AppBar';
 // Needed for onTouchTap
 // Check this repo:

@@ -4,6 +4,8 @@ import {ReactFire, ReactFireMixin} from 'reactfire';
 import ReactMixin from 'react-mixin';
 import Firebase from 'firebase';
 
+import moment from 'moment';
+
 // Material UI stuff
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -85,7 +87,7 @@ var Question = React.createClass({
     return (
       <Card>
         <CardHeader title={this.props.children} />
-        <QuestionButtons id={this.props.id} selectedValue={this.props.selectedValue} />
+        <QuestionButtons id={this.props.id} />
       </Card>
     );
   }
@@ -98,18 +100,31 @@ var QuestionButtons = React.createClass({
     };
   },
   componentWillMount() {
-    this.databaseRef = database.ref('answers');
+    var today = new Date();
+    var first = new Date(today.getFullYear(), 0, 1);
+    var theDay = today.getDay();
+    var theYear = today.getFullYear();
+    var theDay = Math.round(((today - first) / 1000 / 60 / 60 / 24) + .5, 0);
+    var databaseMarker = theDay.toString() + "-" + theYear;
+    this.databaseRef = database.ref('answers/' + databaseMarker);
   },
   onChange(e) {
-    console.log(e.target.value);
-    this.databaseRef.push(e.target.value);
+    console.log(
+      {
+        "questionId": e.target.name,
+        "value": e.target.value
+      });
+    this.databaseRef.push({
+        "questionId": e.target.name,
+        "value": e.target.value
+      });
   },
   render: function() {
     return (
       <form name="questionButtons" id={this.props.id}>
-        <input type="radio" name={"questionButton" + this.props.id} value="0" onChange={this.onChange} />No
-        <input type="radio" name={"questionButton" + this.props.id} value="0.5" onChange={this.onChange} />Slightly
-        <input type="radio" name={"questionButton" + this.props.id} value="1" onChange={this.onChange} />Yes
+        <input type="radio" name={"question" + this.props.id} value="0" onChange={this.onChange} />No
+        <input type="radio" name={"question" + this.props.id} value="0.5" onChange={this.onChange} />Slightly
+        <input type="radio" name={"question" + this.props.id} value="1" onChange={this.onChange} />Yes
       </form>
     );
   }

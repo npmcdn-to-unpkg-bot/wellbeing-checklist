@@ -2,9 +2,30 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {ReactFire, ReactFireMixin} from 'reactfire';
 import ReactMixin from 'react-mixin';
-import Firebase from 'firebase';
 
-import moment from 'moment';
+
+// Setup Dates
+var today = new Date();
+var first = new Date(today.getFullYear(), 0, 1);
+var theDay = today.getDay();
+var theYear = today.getFullYear();
+var theDay = Math.round(((today - first) / 1000 / 60 / 60 / 24) + .5, 0);
+var dateMarker = theDay.toString() + "-" + theYear;
+
+//
+// Setup Firebase
+//
+// Configure Firebase
+import Firebase from 'firebase';
+var config = {
+  apiKey: "AIzaSyCbNEewyeYO1L-UI4PpU3bAkyHmKoA30NY",
+  authDomain: "wellbeing-checklist.firebaseapp.com",
+  databaseURL: "https://wellbeing-checklist.firebaseio.com",
+  storageBucket: "wellbeing-checklist.appspot.com",
+};
+// Initialize Firebase
+Firebase.initializeApp(config);
+var database = firebase.database();
 
 // Material UI stuff
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -16,17 +37,6 @@ import AppBar from 'material-ui/AppBar';
 // Check this repo:
 // https://github.com/zilverline/react-tap-event-plugin
 injectTapEventPlugin();
-
-// Configure Firebase
-var config = {
-  apiKey: "AIzaSyCbNEewyeYO1L-UI4PpU3bAkyHmKoA30NY",
-  authDomain: "wellbeing-checklist.firebaseapp.com",
-  databaseURL: "https://wellbeing-checklist.firebaseio.com",
-  storageBucket: "wellbeing-checklist.appspot.com",
-};
-
-Firebase.initializeApp(config);
-var database = firebase.database();
 
 var App = React.createClass({
   render: function() {
@@ -96,28 +106,28 @@ var Question = React.createClass({
 var QuestionButtons = React.createClass({
   getInitialState() {
     return {
-      answers: ''
+      answer: ''
     };
   },
   componentWillMount() {
-    var today = new Date();
-    var first = new Date(today.getFullYear(), 0, 1);
-    var theDay = today.getDay();
-    var theYear = today.getFullYear();
-    var theDay = Math.round(((today - first) / 1000 / 60 / 60 / 24) + .5, 0);
-    var databaseMarker = theDay.toString() + "-" + theYear;
-    this.databaseRef = database.ref('answers/' + databaseMarker);
+    this.databaseReference = database.ref('questions/' + this.props.id + '/answers/' + dateMarker);
+    // console.log("this.databaseReference = " + this.databaseReference);
+    this.databaseReference.orderByKey().limitToFirst(1).on('value', function(snapshot) {
+      var answer = '';
+      snapshot.forEach(function(childSnapshot) {
+        var answer = childSnapshot.val();
+        console.log("childSnapshot answer: " + answer);
+      }.bind(this));
+      this.setState ({answer : answer});
+    }.bind(this));
+    console.log(this.state.answer);
   },
   onChange(e) {
-    console.log(
+    var newRef = this.databaseReference.push(
       {
-        "questionId": e.target.name,
-        "value": e.target.value
-      });
-    this.databaseRef.push({
-        "questionId": e.target.name,
-        "value": e.target.value
-      });
+        "value" : e.target.value
+      }
+    );
   },
   render: function() {
     return (

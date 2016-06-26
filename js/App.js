@@ -116,14 +116,10 @@ var QuestionButtons = React.createClass({
     this.databaseReference.limitToLast(1).on('value', function(snapshot) {
       var answer = '';
       snapshot.forEach(function(childSnapshot) {
-        var answer = childSnapshot.val();
+        answer = childSnapshot.val();
       }.bind(this));
       this.setState ({answer : answer.value});
-      console.log(this.state.answer);
     }.bind(this));
-  },
-  componentDidMount() {
-    document.querySelector('#questionButtons' + this.props.id + ' input[name="question' + this.props.id + '-' + '"]'); // .style.color = 'red';
   },
   onChange(e) {
     var newRef = this.databaseReference.push(

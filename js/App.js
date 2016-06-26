@@ -70,7 +70,7 @@ var QuestionList = React.createClass({
     database.ref('questions').on('value', function(snapshot) {
       var questions = [];
       snapshot.forEach(function(childSnapshot) {
-        var question = childSnapshot.val();
+        var question = childSnapshot;
         questions.push(question);
       }.bind(this));
       this.setState ({questions : questions});
@@ -78,8 +78,10 @@ var QuestionList = React.createClass({
   },
   render: function() {
     var questionNodes = this.state.questions.map(function(question) {
+      var questionKey = question.key;
+      question = question.val();
       return (
-        <Question key={question.id} id={question.id} selectedValue={question.selectedValue}>
+        <Question key={questionKey} id={questionKey}>
           {question.text}
         </Question>
       )
@@ -110,17 +112,18 @@ var QuestionButtons = React.createClass({
     };
   },
   componentWillMount() {
-    this.databaseReference = database.ref('questions/' + this.props.id + '/answers/' + dateMarker);
-    // console.log("this.databaseReference = " + this.databaseReference);
-    this.databaseReference.orderByKey().limitToFirst(1).on('value', function(snapshot) {
+    this.databaseReference = database.ref('questions/' + this.props.id + '/answers/' + dateMarker + '/');
+    this.databaseReference.limitToLast(1).on('value', function(snapshot) {
       var answer = '';
       snapshot.forEach(function(childSnapshot) {
         var answer = childSnapshot.val();
-        console.log("childSnapshot answer: " + answer);
       }.bind(this));
-      this.setState ({answer : answer});
+      this.setState ({answer : answer.value});
+      console.log(this.state.answer);
     }.bind(this));
-    console.log(this.state.answer);
+  },
+  componentDidMount() {
+    document.querySelector('#questionButtons' + this.props.id + ' input[name="question' + this.props.id + '-' + '"]'); // .style.color = 'red';
   },
   onChange(e) {
     var newRef = this.databaseReference.push(
@@ -131,10 +134,10 @@ var QuestionButtons = React.createClass({
   },
   render: function() {
     return (
-      <form name="questionButtons" id={this.props.id}>
-        <input type="radio" name={"question" + this.props.id} value="0" onChange={this.onChange} />No
-        <input type="radio" name={"question" + this.props.id} value="0.5" onChange={this.onChange} />Slightly
-        <input type="radio" name={"question" + this.props.id} value="1" onChange={this.onChange} />Yes
+      <form name="questionButtons" id={"questionButtons" + this.props.id}>
+        <input type="radio" name={"question" + this.props.id + "-0"} value="0" onChange={this.onChange} checked={this.state.answer == 0 ? true : false} />No
+        <input type="radio" name={"question" + this.props.id + "-0.5"} value="0.5" onChange={this.onChange} checked={this.state.answer == 0.5 ? true : false} />Slightly
+        <input type="radio" name={"question" + this.props.id + "-1"} value="1" onChange={this.onChange} checked={this.state.answer == 1 ? true : false} />Yes
       </form>
     );
   }

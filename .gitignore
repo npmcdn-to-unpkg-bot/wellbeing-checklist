@@ -1,3 +1,5 @@
 /bower_components/
 /dist/
 /node_modules/
+/build/bundle.js
+wellbeing-checklist.sublime-project

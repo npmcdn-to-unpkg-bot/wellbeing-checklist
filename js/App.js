@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import {ReactFire, ReactFireMixin} from 'reactfire';
 import ReactMixin from 'react-mixin';
 
-
 // Setup Dates
 var today = new Date();
 var first = new Date(today.getFullYear(), 0, 1);
@@ -15,7 +14,7 @@ var dateMarker = theDay.toString() + "-" + theYear;
 //
 // Setup Firebase
 //
-// Configure Firebase
+//// Configure Firebase
 import Firebase from 'firebase';
 var config = {
   apiKey: "AIzaSyCbNEewyeYO1L-UI4PpU3bAkyHmKoA30NY",
@@ -23,7 +22,7 @@ var config = {
   databaseURL: "https://wellbeing-checklist.firebaseio.com",
   storageBucket: "wellbeing-checklist.appspot.com",
 };
-// Initialize Firebase
+//// Initialize Firebase
 Firebase.initializeApp(config);
 var database = firebase.database();
 
@@ -34,8 +33,6 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import {Card, CardHeader} from 'material-ui/Card';
 import AppBar from 'material-ui/AppBar';
 // Needed for onTouchTap
-// Check this repo:
-// https://github.com/zilverline/react-tap-event-plugin
 injectTapEventPlugin();
 
 var App = React.createClass({
@@ -53,7 +50,7 @@ var AppContent = React.createClass({
     return (
       <div class="appContent">
         <AppBar title={"Wellbeing Checklist – " + dateMarker} showMenuIconButton={false} />
-        <QuestionList data={this.props.data} />
+        <QuestionList />
       </div>
     );
   }
@@ -127,9 +124,27 @@ var QuestionButtons = React.createClass({
   render: function() {
     return (
       <form name="questionButtons" id={"questionButtons" + this.props.id}>
-        <input type="radio" name={"question" + this.props.id + "-0"} value="0" onChange={this.onChange} checked={this.state.answer == 0 ? true : false} />No
-        <input type="radio" name={"question" + this.props.id + "-0.5"} value="0.5" onChange={this.onChange} checked={this.state.answer == 0.5 ? true : false} />Slightly
-        <input type="radio" name={"question" + this.props.id + "-1"} value="1" onChange={this.onChange} checked={this.state.answer == 1 ? true : false} />Yes
+        <input
+          type="radio"
+          name={"question" + this.props.id + "-0"}
+          value="0"
+          onChange={this.onChange}
+          checked={this.state.answer == 0 ? true : false}
+        />No
+        <input
+          type="radio"
+          name={"question" + this.props.id + "-0.5"}
+          value="0.5"
+          onChange={this.onChange}
+          checked={this.state.answer == 0.5 ? true : false}
+        />Slightly
+        <input
+          type="radio"
+          name={"question" + this.props.id + "-1"}
+          value="1"
+          onChange={this.onChange}
+          checked={this.state.answer == 1 ? true : false}
+        />Yes
       </form>
     );
   }

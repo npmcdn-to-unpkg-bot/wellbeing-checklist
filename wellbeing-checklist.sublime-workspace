@@ -1,0 +1,1414 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"padding",
+				"padding-right"
+			],
+			[
+				"Link",
+				"link_to"
+			],
+			[
+				"comparison",
+				"comparisonSelected"
+			],
+			[
+				"uni",
+				"university_matches"
+			],
+			[
+				"text",
+				"Text"
+			],
+			[
+				"respons",
+				"responseData"
+			],
+			[
+				"st",
+				"styles"
+			],
+			[
+				"React",
+				"ReactNativeTest"
+			],
+			[
+				"Hello",
+				"HelloThere"
+			],
+			[
+				"Rea",
+				"ReactNativeTest"
+			],
+			[
+				"paper-",
+				"paper-toolbar"
+			],
+			[
+				"paper",
+				"paper-toolbar"
+			],
+			[
+				"border-bottom-",
+				"border-bottom-style"
+			],
+			[
+				"border-",
+				"border-bottom"
+			],
+			[
+				"widget-bo",
+				"widget-border-color"
+			],
+			[
+				"border",
+				"border-bottom"
+			],
+			[
+				"univer",
+				"university_match"
+			],
+			[
+				"font-weight",
+				"font-weight-base"
+			],
+			[
+				"last",
+				"last-of-type"
+			],
+			[
+				"brand-",
+				"brand-primary-lightest"
+			],
+			[
+				"ui-grey-",
+				"ui-grey-lighter"
+			],
+			[
+				"ui-",
+				"ui-grey"
+			],
+			[
+				"font-w",
+				"font-weight-base"
+			],
+			[
+				"widget-",
+				"widget-spacing-unit"
+			],
+			[
+				"border-radiu",
+				"border-radius-base"
+			],
+			[
+				"border-top-",
+				"border-top-left-radius"
+			],
+			[
+				"max",
+				"max-height"
+			],
+			[
+				"univeris",
+				"University"
+			],
+			[
+				"btn",
+				"btn-call-to-action"
+			],
+			[
+				"btn-call-to-action",
+				"btn-call-to-action-hybrid-counsellor-dark"
+			],
+			[
+				"backgroun",
+				"background-size"
+			],
+			[
+				"marketing",
+				"marketing-section-image-layout-unit"
+			],
+			[
+				"backgr",
+				"background-position"
+			],
+			[
+				"bac",
+				"background-repeat"
+			],
+			[
+				"schools",
+				"school_student"
+			],
+			[
+				"brand-counsel",
+				"brand-counsellor-lightest"
+			],
+			[
+				"image",
+				"image-url"
+			],
+			[
+				"counsello",
+				"counsellor_landing"
+			],
+			[
+				"brand-counse",
+				"brand-counsellor-dark"
+			],
+			[
+				"scree",
+				"screen-lg-min"
+			],
+			[
+				"screen",
+				"screen-md-max"
+			],
+			[
+				"sc",
+				"screen-lg-min"
+			],
+			[
+				"po",
+				"position"
+			],
+			[
+				"brand-cou",
+				"brand-counsellor"
+			],
+			[
+				"coun",
+				"counsellor-marketing-results"
+			],
+			[
+				"brand",
+				"brand-counsellor-light"
+			],
+			[
+				"bran",
+				"brand-counsellor-light"
+			],
+			[
+				"brand-c",
+				"brand-counsellor-darker"
+			],
+			[
+				"brand-couns",
+				"brand-counsellor-light"
+			],
+			[
+				"font",
+				"font-family"
+			],
+			[
+				"bridgeu-",
+				"bridgeu-black"
+			],
+			[
+				"border-s",
+				"border-style"
+			],
+			[
+				"margin-",
+				"margin-bottom"
+			],
+			[
+				"background",
+				"background-color"
+			],
+			[
+				"bacgro",
+				"background-color"
+			],
+			[
+				"com",
+				"com-section	Idiomatic CSS - Section Comment Block"
+			],
+			[
+				"margin",
+				"margin-bottom"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"install pac",
+				"Package Control: Install Package"
+			],
+			[
+				"install ",
+				"Package Control: Install Package"
+			],
+			[
+				"pack in",
+				"Package Control: Install Package"
+			],
+			[
+				"pack insta",
+				"Package Control: Install Package"
+			],
+			[
+				"install pack",
+				"Package Control: Install Package"
+			],
+			[
+				"pack",
+				"Package Control: Install Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"install package",
+				"Package Control: Install Package"
+			],
+			[
+				"haml",
+				"HTML2Haml: Convert clipboard content"
+			],
+			[
+				"packag install",
+				"Package Control: Install Package"
+			],
+			[
+				"package control instal",
+				"Package Control: Install Package"
+			],
+			[
+				"package instal",
+				"Package Control: Install Package"
+			],
+			[
+				"snippet modal",
+				"Snippet: bs3-modal"
+			],
+			[
+				"package install",
+				"Package Control: Install Package"
+			],
+			[
+				"install pa",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 521.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/jaybowles/repositories/wellbeing-checklist/package.json",
+		"/Users/jaybowles/Repositories/wellbeing-checklist/gulpfile.js",
+		"/Users/jaybowles/repositories/wellbeing-checklist/firebase.json",
+		"/Users/jaybowles/repositories/wellbeing-checklist/js/App.js",
+		"/Users/jaybowles/repositories/wellbeing-checklist/index.html",
+		"/Users/jaybowles/repositories/wellbeing-checklist/.gitignore",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/universities/_matchable_display_content.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/sidebars/_preparation.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/public/assets/source_maps/school_student_dashboard.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/schools/applications/_project_widget.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/schools/applications/_projects.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/guides/_navbar.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/layouts/application.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/panels/_side_panel.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/controllers/schools/applications_controller.rb",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/schools/advisors/_navbar.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/schools/_navbar.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/layouts/_navbar.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/value_objects/profile_section/personal_preferences.rb",
+		"/Users/jaybowles/Google Drive/code/bridgeu/public/assets/source_maps/advisor_marketing.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/public/assets/source_maps/marketing_pages.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/home/schools.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/config/routes.rb",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/controllers/schools/students_controller.rb",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/schools/applications/_activity_widget.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/panels/pages/_reference_letter.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/user_mailer/referral_signup.html.haml",
+		"/Users/jaybowles/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/schools/advisors/_add_student_parent_assign_task_videos.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/schools/applications/_student_task_row.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/config/environments/development.rb",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/models/matching/match_groups/cost_group.rb",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/schools/applications/_tasks.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/lists/icons/_timeline.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/lists/rows/applications_by/_deadline.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/lists/rows/_upcoming_deadline.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/schools/advisors/_advisor_dashboard_activity_feed.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/schools/applications/show.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/navbar/types/_shortlisted.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/recommendation_writers/show.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/navbar/components/buttons/_add_shortlist.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/navbar/_navbar.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/modals/_acknowledgements_modal.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/modals/strategy_advisor/_begin_identify_strategy_factors_modal.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/experiences/strategy_factors.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/experiences/_experience_report.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/experiences/improve.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/experiences/index.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/public/assets/source_maps/navbar.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/navbar/types/_main.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/documents/index.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/annotated_essays/_annotated_essay.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/layouts/_navbar_menu.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/account/_other_person_top.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/schools/_projects_table.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/schools/projects.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/models/profile.rb",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/profiles/show.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/experiences/report.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/reference_letter_reports/edit.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/helpers/profiles_helper.rb",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/add_x_scrapbook_items_tasks/_fields.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/users/_data_consent_checkbox.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/assets/stylesheets/modules/lists.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/public/assets/source_maps/buttons.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/public/assets/source_maps/widgets.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/recommendation_writers/index.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/layouts/_schools_landing_navbar_actions.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/public/assets/source_maps/material-typography.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/announcements/_apply_here_login.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/navbar/types/_school.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/schools/show.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/material_navbar/_navbar.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/account/_other_person_bottom.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/personal_preferences/questions/_cost.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/test/integration/routing_test.rb",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app.json",
+		"/Users/jaybowles/Google Drive/code/bridgeu/db/schema.rb",
+		"/Users/jaybowles/Google Drive/code/bridgeu/test/integration/university_matches_shortlisted_integration_test.rb",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/helpers/navigation_helper.rb",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/admin/users/_sidebar.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/profiles/questions/academic/_grades.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/panels/types/_navigation_student.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/panels/types/_navigation_advisor_school.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/tmp/cache/assets/sprockets/v3.0/tS/tS9Rj3KNuIbHa3bHdTO1EE_4aWG4O8WMIbkqpZgnHhc.cache",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/schools/_students_filters.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/schools/advisors/students.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/schools/_students_table.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/schools/students.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/widgets/_student_management.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/test/views/bottom_and_side_navigation_advisor_test.rb",
+		"/Users/jaybowles/Google Drive/code/bridgeu/test/views/bottom_and_side_navigation_school_test.rb",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/schools/advisors/projects.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/db/seeds.rb",
+		"/Users/jaybowles/Google Drive/code/bridgeu/public/assets/source_maps/type.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/panels/pages/_subject_interests.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/sidebars/_recommendation_writers.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/university_matches/_university_match_actions.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/university_matches/_university_match_match_scores.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/assets/stylesheets/layouts/navbar.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/university_matches/applications.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/controllers/application_controller.rb",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/controllers/schools_controller.rb",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/shared/_endless_scrolling_javascript.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/assets/stylesheets/site/mixins/_links.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/sidebars/_applications.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/university_matches/shortlist.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/sidebars/_strategy.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/controllers/experiences_controller.rb",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/assets/stylesheets/site/_type.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/controllers/profiles_controller.rb",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/assets/stylesheets/components/side-nav.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/views/university_matches/discarded.html.haml",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/assets/stylesheets/components/modals.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/assets/stylesheets/pages/home.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/assets/stylesheets/site/_utilities.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/assets/stylesheets/site.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/assets/stylesheets/site/_modals.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/assets/stylesheets/site/_variables.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/assets/stylesheets/site/_buttons.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/assets/stylesheets/application.css",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/assets/stylesheets/modules/info-bullet.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/assets/stylesheets/site/_jumbotron.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/assets/stylesheets/pages/advisor_marketing.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/assets/stylesheets/modules/material-navbar.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/assets/stylesheets/pages/marketing_pages.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/assets/stylesheets/site/_responsive-utilities.scss",
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/controllers/users_controller.rb"
+	],
+	"find":
+	{
+		"height": 37.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			"",
+			"*html*",
+			"*html*, *scss*",
+			"*html*",
+			"",
+			"Student Assignments",
+			"",
+			"*scss*",
+			"*html*",
+			"*scss*",
+			"*html*",
+			"*scss*",
+			"*html*",
+			"",
+			"*scss*",
+			"*html*",
+			"*rb*",
+			"*html*",
+			"*scss*",
+			"*html*",
+			"*scss*",
+			"*rb*",
+			"*html*",
+			"*scss*",
+			"*html*",
+			"*scss*",
+			"",
+			"*html*",
+			"*scss*",
+			"*html*",
+			"*scss*",
+			"*html*",
+			"*scss*",
+			"*html*",
+			"*rb*",
+			"*scss*",
+			"*html*",
+			"*scss*",
+			"*html*",
+			"*scss*",
+			"*html*",
+			"*scss*",
+			"*rb*",
+			"*html*",
+			"*rb*",
+			"*html*",
+			"*scss*",
+			"*html*",
+			"*rb*",
+			"*html*",
+			"*rb*",
+			"*html*",
+			"*rb*",
+			"*html*",
+			"*rb*",
+			"*scss*",
+			"*html*",
+			"*scss*",
+			"*html*",
+			"",
+			"*rb*",
+			"*html*",
+			"*scss*",
+			"*html*",
+			"*.rb*",
+			"*rb*",
+			"*html*",
+			"",
+			"*html*",
+			"*scss*",
+			"*html*",
+			"*hmtl*",
+			"*scss*",
+			"*html*",
+			"*scss*",
+			"",
+			"*html*",
+			"*scss*",
+			"",
+			"*html*",
+			"",
+			"*html*",
+			"",
+			"*scss*",
+			"*html*",
+			"*scss*",
+			"",
+			"*scss*",
+			"*haml*",
+			"*scss*",
+			"*haml*",
+			"*scss*",
+			"*haml*",
+			"*css*",
+			"*.haml*",
+			".haml",
+			"",
+			"*scss*",
+			"*haml*",
+			"",
+			"*rb*",
+			"*haml*",
+			"*scss*",
+			"*haml*",
+			"",
+			"*haml*",
+			"*scss*",
+			"",
+			"*haml*",
+			"*rb*",
+			"*haml*",
+			"*scss*",
+			"*haml*",
+			"*scss*",
+			"*haml*",
+			"*scss*",
+			"",
+			"*haml*",
+			"",
+			"*scss*",
+			"",
+			"*scss*",
+			"",
+			"*haml*",
+			"",
+			"*scss*",
+			"",
+			"*scss*"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			" type",
+			" t",
+			"info-bullet",
+			"typeahead",
+			".list-inline",
+			"$material-padding-smallest:",
+			"material-padding-smallest",
+			"checkbox",
+			"= render \"shared/link_to_chat\"",
+			"Not sure why you got this",
+			"Work through tools at your own pace",
+			" = render \"activity_widget\",",
+			"Recent activity",
+			".widget-heading",
+			"\"tasks\"",
+			"_tasks",
+			"Your advisor hasn",
+			"&rsquo;",
+			"page-shortlist-content",
+			"page-applications",
+			".applications-summary",
+			"card-project",
+			".col-xs-8",
+			"Discover BridgeU",
+			"right:",
+			" pull-right",
+			".clearfix.u-padding-b-small",
+			"%p",
+			"material-divider",
+			".clearfix",
+			"pull-right\"",
+			"btn-default btn-sm\"",
+			"btn\"",
+			"%p",
+			"Students Assignments",
+			"Student Assignments",
+			"Students Assignments",
+			".side-nav__section-link",
+			"extras: \"20 align-bottom\",",
+			"extras: \"20 align-bottom\", class: \"side-nav__section-link-icon\")",
+			"-heading",
+			".widget-heading",
+			".page-title-heading",
+			"Add your target",
+			"You have no matches",
+			"icon",
+			"students_path_params)",
+			"Add a student",
+			".grey",
+			"students_table",
+			"Behind schedule",
+			"_icon",
+			"link_text:",
+			"Tasks",
+			"your advisor hasn't set",
+			"your adivsor hasn't set",
+			", extras: \"align-bottom\", class: \"side-nav__section-link-icon\")",
+			"class: \"side-nav__section-link-icon\")",
+			", extras: \"20 align-bottom\", class: \"side-nav__section-link-icon\")",
+			"extras: \"20 align-bottom\", class: \"side-nav__section-link-icon\")",
+			"extras: \"20\"",
+			" align-bottom",
+			"text:",
+			", extras: \"align-bottom\"",
+			".side-nav__section-link",
+			"material-font",
+			"Add your target grades",
+			"====",
+			"Your advisor hasn't set",
+			"Chance of Acceptance",
+			"Don’t understand your recommendations?",
+			"modal",
+			"recommendations",
+			"preference_fit",
+			"chance_of_acceptance",
+			"apply-here-shortlist-detail-toggle",
+			"announcements",
+			"srcset",
+			"text-muted\"",
+			"--",
+			"render",
+			"your recommendations",
+			"list-inline",
+			"Back",
+			"Back to",
+			".list-inline",
+			"button_tag",
+			"users.each",
+			"not-last",
+			"list-inline",
+			"understand your recommendations?",
+			"understand your matches?",
+			"Don",
+			"combine_intelligence",
+			"$material-padding-default:",
+			"$material-padding-default",
+			".marketing-section-grey",
+			"schools-marketing-section-grey",
+			"grey",
+			".col-md-8",
+			"$material-shadow-element-height-1",
+			"height",
+			".material-height",
+			".material-shadow",
+			".material",
+			".text-center",
+			"text-center",
+			"marketing-section-brand-primary",
+			"schools-marketing-section-primary",
+			"before",
+			"Smarter University Applications",
+			"====",
+			"%i ",
+			"%b ",
+			"%b",
+			".col-xs-2",
+			"%li.schools-marketing-supported-country",
+			"= image_tag image_path(\"flags",
+			"=image",
+			"schools-marketing-testimonial-img",
+			".col-md-6",
+			"\n                width: \"40\",",
+			"%p.text-display \"",
+			"=image_tag",
+			"image_tag",
+			"Home",
+			"schools-marketing-video-play",
+			"@include material-shadow(1);"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"Hide",
+			"Preference Match",
+			"Profile Wizard",
+			"Preferences",
+			"Profile builder",
+			"",
+			"%tr",
+			"",
+			"site/mixins/borders",
+			"$(this).find('span').text(value - 1)",
+			".dashboard-task-widget",
+			".pie-chart-md",
+			".what-is-the-sat-video-widget",
+			".school-student-tasks-widget",
+			".school-student-task-widget",
+			".element-pad-top-bottom",
+			"angle-right",
+			"",
+			".widget-body-component-brandPrimary",
+			".widget-header-brandPrimary",
+			".widget-header-grey",
+			".widget-header-brandPrimary",
+			".widget-heading-icon",
+			".widget-action-right-lg",
+			"Set up task",
+			"modal-sizing",
+			".widget-header-greyLighter",
+			"window-height",
+			".window-height-element",
+			"$ui-grey-lighter",
+			".widget-separate",
+			"$color:",
+			"padding",
+			"paper",
+			"recommended_universities",
+			"recommended_universities\nvimeo-video",
+			"vimeo-video\nvimeo-video",
+			"$padding",
+			"element-height",
+			"paper",
+			"-separate-bottom",
+			"widget-outside-widget-group",
+			".widget-outside-group",
+			".widget-mb",
+			".widget.widget-last",
+			"widget",
+			"schools",
+			"Show me my university list",
+			"https://jaytest.studenttenant.com/bundles/jakutast/images/email/new/logo.jpg"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 29.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 100.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "wellbeing-checklist.sublime-project",
+	"replace":
+	{
+		"height": 54.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"~/Repositories/wellbeing-checklist/gulpfile.js"
+			],
+			[
+				"package",
+				"package.json"
+			],
+			[
+				"index",
+				"index.html"
+			],
+			[
+				"app",
+				"js/App.js"
+			],
+			[
+				"materialicon",
+				"app/helpers/material_icons_helper.rb"
+			],
+			[
+				"studenttable",
+				"app/views/schools/_students_table.html.haml"
+			],
+			[
+				"linktochat",
+				"app/views/shared/_link_to_chat.html.haml"
+			],
+			[
+				"_a",
+				"app/views/sidebars/_applications.html.haml"
+			],
+			[
+				"shortlist",
+				"app/views/university_matches/shortlist.html.haml"
+			],
+			[
+				"sideapplications",
+				"app/views/sidebars/_applications.html.haml"
+			],
+			[
+				"applications",
+				"app/views/university_matches/applications.html.haml"
+			],
+			[
+				"sidebar",
+				"app/views/sidebars/_applications.html.haml"
+			],
+			[
+				"sharedlink",
+				"app/views/shared/_link_to_chat.html.haml"
+			],
+			[
+				"_details",
+				"app/views/university_matches/modals/_match_details.html.haml"
+			],
+			[
+				"appshow",
+				"app/views/profiles/show.html.haml"
+			],
+			[
+				"advisordas",
+				"app/views/schools/advisors/_advisor_dashboard_activity_feed.html.haml"
+			],
+			[
+				"_activity",
+				"app/views/schools/applications/_activity_widget.html.haml"
+			],
+			[
+				"mattyp",
+				"public/assets/source_maps/material-typography.scss"
+			],
+			[
+				"_appl",
+				"app/views/sidebars/_applications.html.haml"
+			],
+			[
+				"applications.html",
+				"app/views/university_matches/applications.html.haml"
+			],
+			[
+				"util",
+				"app/assets/stylesheets/site/_utilities.scss"
+			],
+			[
+				"uti",
+				"app/assets/stylesheets/site/_utilities.scss"
+			],
+			[
+				"_applications",
+				"app/views/sidebars/_applications.html.haml"
+			],
+			[
+				"navcompbutto",
+				"app/views/navbar/components/buttons/_add_shortlist.html.haml"
+			],
+			[
+				"typesshortli",
+				"app/views/navbar/types/_shortlisted.html.haml"
+			],
+			[
+				"sidebarapp",
+				"app/views/sidebars/_applications.html.haml"
+			],
+			[
+				"_projects",
+				"app/views/schools/applications/_projects.html.haml"
+			],
+			[
+				"_tasks",
+				"app/views/schools/applications/_tasks.html.haml"
+			],
+			[
+				"subjectinter",
+				"app/views/panels/pages/_subject_interests.html.haml"
+			],
+			[
+				"iconhelp",
+				"app/helpers/material_icons_helper.rb"
+			],
+			[
+				"navst",
+				"app/views/panels/types/_navigation_student.html.haml"
+			],
+			[
+				"projecttabl",
+				"app/views/schools/_projects_table.html.haml"
+			],
+			[
+				"projecthtml",
+				"app/views/schools/projects.html.haml"
+			],
+			[
+				"materiaicons",
+				"public/assets/source_maps/material-icons.scss"
+			],
+			[
+				"navstud",
+				"app/views/panels/types/_navigation_student.html.haml"
+			],
+			[
+				"materialtyp",
+				"public/assets/source_maps/material-typography.scss"
+			],
+			[
+				"widgets",
+				"public/assets/source_maps/widgets.scss"
+			],
+			[
+				"typescss",
+				"public/assets/source_maps/type.scss"
+			],
+			[
+				"discard",
+				"app/views/university_matches/discarded.html.haml"
+			],
+			[
+				"recommended",
+				"app/views/university_matches/recommended.html.haml"
+			],
+			[
+				"sidenavhtml",
+				"app/views/schools/advisors/_add_student_parent_assign_task_videos.html.haml"
+			],
+			[
+				"studenttaskrow",
+				"app/views/schools/applications/_student_task_row.html.haml"
+			],
+			[
+				"tasks",
+				"app/views/schools/applications/_tasks.html.haml"
+			],
+			[
+				"stshow",
+				"tmp/cache/assets/sprockets/v3.0/tS/tS9Rj3KNuIbHa3bHdTO1EE_4aWG4O8WMIbkqpZgnHhc.cache"
+			],
+			[
+				"studentfilter",
+				"app/views/schools/_students_filters.html.haml"
+			],
+			[
+				"studentstable",
+				"app/views/schools/_students_table.html.haml"
+			],
+			[
+				"adstudents",
+				"app/views/schools/advisors/students.html.haml"
+			],
+			[
+				"layapp",
+				"app/views/layouts/application.html.haml"
+			],
+			[
+				"studentsfilters",
+				"app/views/schools/_students_filters.html.haml"
+			],
+			[
+				"schoolsadvishtml",
+				"app/views/schools/_advisors_overview.html.haml"
+			],
+			[
+				"mateiraltyp",
+				"public/assets/source_maps/material-typography.scss"
+			],
+			[
+				"materialicons",
+				"app/helpers/material_icons_helper.rb"
+			],
+			[
+				"studentdash",
+				"public/assets/source_maps/school_student_dashboard.scss"
+			],
+			[
+				"projectwidget",
+				"app/views/schools/applications/_project_widget.html.haml"
+			],
+			[
+				"projects",
+				"app/views/schools/applications/_projects.html.haml"
+			],
+			[
+				"actwidg",
+				"app/views/schools/applications/_activity_widget.html.haml"
+			],
+			[
+				"navigationstudent",
+				"app/views/panels/types/_navigation_student.html.haml"
+			],
+			[
+				"mater",
+				"public/assets/source_maps/material-typography.scss"
+			],
+			[
+				"variables",
+				"app/assets/stylesheets/site/_variables.scss"
+			],
+			[
+				"sidenav",
+				"app/assets/stylesheets/components/side-nav.scss"
+			],
+			[
+				"discarded",
+				"app/views/university_matches/discarded.html.haml"
+			],
+			[
+				"unimatchesjs",
+				"app/assets/javascripts/controllers/UniversityMatches.js"
+			],
+			[
+				"_help",
+				"app/views/university_matches/_help.html.haml"
+			],
+			[
+				"recommen",
+				"app/views/university_matches/recommended.html.haml"
+			],
+			[
+				"type",
+				"app/assets/stylesheets/site/_type.scss"
+			],
+			[
+				"recomm",
+				"app/views/university_matches/recommended.html.haml"
+			],
+			[
+				"respon",
+				"app/assets/stylesheets/site/_responsive-utilities.scss"
+			],
+			[
+				"admark",
+				"app/assets/stylesheets/pages/advisor_marketing.scss"
+			],
+			[
+				"adv",
+				"public/assets/source_maps/advisor_marketing.scss"
+			],
+			[
+				"usercontroler",
+				"app/controllers/users_controller.rb"
+			],
+			[
+				"/",
+				"app/views/university_matches/recommended.html.haml"
+			],
+			[
+				"advisormarketing",
+				"app/assets/stylesheets/pages/advisor_marketing.scss"
+			],
+			[
+				"utilie",
+				"app/assets/stylesheets/site/_utilities.scss"
+			],
+			[
+				"advmark",
+				"public/assets/source_maps/advisor_marketing.scss"
+			],
+			[
+				"marketingpages",
+				"public/assets/source_maps/marketing_pages.scss"
+			],
+			[
+				"show",
+				"app/views/schools/show.html.haml"
+			],
+			[
+				"buttons",
+				"public/assets/source_maps/buttons.scss"
+			],
+			[
+				"homschool",
+				"app/views/home/schools.html.haml"
+			],
+			[
+				"applyherelgo",
+				"app/views/announcements/_apply_here_login.html.haml"
+			],
+			[
+				"homeschools",
+				"app/views/home/schools.html.haml"
+			],
+			[
+				"schoolsnavbar",
+				"app/views/schools/_navbar.html.haml"
+			],
+			[
+				"layoutsna",
+				"app/views/layouts/_navbar.html.haml"
+			],
+			[
+				"unimatchshortinteg",
+				"test/integration/university_matches_shortlisted_integration_test.rb"
+			],
+			[
+				"applicationshtml",
+				"app/views/university_matches/applications.html.haml"
+			],
+			[
+				"personalprefer",
+				"app/value_objects/profile_section/personal_preferences.rb"
+			],
+			[
+				"internatio",
+				"app/assets/images/schools_landing/international_scope.svg"
+			],
+			[
+				"homescss",
+				"app/assets/stylesheets/pages/home.scss"
+			],
+			[
+				"warning_",
+				"app/views/university_matches/_warning_no_grades.html.haml"
+			],
+			[
+				"recom",
+				"app/views/university_matches/recommended.html.haml"
+			],
+			[
+				"routes",
+				"config/routes.rb"
+			],
+			[
+				"applicationsshow",
+				"app/views/schools/applications/show.html.haml"
+			],
+			[
+				"homeschool",
+				"app/views/home/schools.html.haml"
+			],
+			[
+				"matchdetails",
+				"app/views/university_matches/modals/_match_details.html.haml"
+			],
+			[
+				"unimatchscor",
+				"app/views/university_matches/_university_match_match_scores.html.haml"
+			],
+			[
+				"unimatchhtml",
+				"app/views/university_matches/_university_match.html.haml"
+			],
+			[
+				"unimatch",
+				"app/controllers/university_matches_controller.rb"
+			],
+			[
+				"develop",
+				"config/environments/development.rb"
+			],
+			[
+				"costgroup",
+				"app/models/matching/match_groups/cost_group.rb"
+			],
+			[
+				"endlessscro",
+				"app/views/shared/_endless_scrolling_javascript.html.haml"
+			],
+			[
+				"activitywi",
+				"app/views/schools/applications/_activity_widget.html.haml"
+			],
+			[
+				"acti",
+				"app/views/schools/applications/_activity_widget.html.haml"
+			],
+			[
+				"projec",
+				"app/views/schools/applications/_projects.html.haml"
+			],
+			[
+				"project",
+				"app/views/schools/applications/_projects.html.haml"
+			],
+			[
+				"recommdned",
+				"app/views/university_matches/recommended.html.haml"
+			],
+			[
+				"navmain",
+				"app/views/navbar/types/_main.html.haml"
+			],
+			[
+				"testindex",
+				"app/views/test_sittings/index.html.haml"
+			],
+			[
+				"navscss",
+				"public/assets/source_maps/navbar.scss"
+			],
+			[
+				"navbar",
+				"app/assets/stylesheets/layouts/navbar.scss"
+			],
+			[
+				"expreport",
+				"app/views/experiences/report.html.haml"
+			],
+			[
+				"navman",
+				"app/views/navbar/types/_main.html.haml"
+			],
+			[
+				"exprepor",
+				"app/views/experiences/report.html.haml"
+			],
+			[
+				"material",
+				"public/assets/source_maps/material-typography.scss"
+			],
+			[
+				"profileshow",
+				"app/views/profiles/show.html.haml"
+			],
+			[
+				"mainnav",
+				"app/views/material_navbar/_navbar.html.haml"
+			],
+			[
+				"navb",
+				"app/assets/stylesheets/layouts/navbar.scss"
+			],
+			[
+				"unicrousdetail",
+				"app/views/university_matches/modals/_university_course_details.html.haml"
+			],
+			[
+				"shortli",
+				"app/views/university_matches/shortlist.html.haml"
+			],
+			[
+				"studentscontroller",
+				"app/controllers/schools/students_controller.rb"
+			],
+			[
+				"navbarshort",
+				"app/views/navbar/types/_shortlisted.html.haml"
+			],
+			[
+				"navbar/types/school",
+				"app/views/navbar/types/_school.html.haml"
+			],
+			[
+				"shortl",
+				"app/views/university_matches/shortlist.html.haml"
+			],
+			[
+				"navshort",
+				"app/views/navbar/types/_shortlisted.html.haml"
+			],
+			[
+				"modalhtml",
+				"app/views/modals/_acknowledgements_modal.html.haml"
+			],
+			[
+				"navbar/components/buttons/add_shortlist",
+				"app/views/navbar/components/buttons/_add_shortlist.html.haml"
+			],
+			[
+				"utiliti",
+				"app/assets/stylesheets/site/_utilities.scss"
+			],
+			[
+				"navcomaddshor",
+				"app/views/navbar/components/buttons/_add_shortlist.html.haml"
+			],
+			[
+				"navshortlist",
+				"app/views/navbar/types/_shortlisted.html.haml"
+			],
+			[
+				"useruphtml",
+				"app/views/school_onboardings/_user_upload.html.haml"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"~/Google Drive/code/sublime projects/jaybowl.es.sublime-project"
+			],
+			[
+				"ja",
+				"~/Google Drive/code/sublime projects/jaybowl.es.sublime-project"
+			],
+			[
+				"jay",
+				"~/Google Drive/code/sublime projects/jaybowl.es.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 230.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

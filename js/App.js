@@ -52,7 +52,7 @@ var AppContent = React.createClass({
   render: function() {
     return (
       <div class="appContent">
-        <AppBar title="Wellbeing Checklist" showMenuIconButton={false} />
+        <AppBar title={"Wellbeing Checklist – " + dateMarker} showMenuIconButton={false} />
         <QuestionList data={this.props.data} />
       </div>
     );
@@ -122,11 +122,7 @@ var QuestionButtons = React.createClass({
     }.bind(this));
   },
   onChange(e) {
-    var newRef = this.databaseReference.push(
-      {
-        "value" : e.target.value
-      }
-    );
+    var newRef = this.databaseReference.push({"value" : e.target.value});
   },
   render: function() {
     return (

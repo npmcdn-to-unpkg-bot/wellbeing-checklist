@@ -31,15 +31,27 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import {Card, CardHeader, CardActions} from 'material-ui/Card';
+import {purple500} from 'material-ui/styles/colors'
 import AppBar from 'material-ui/AppBar';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 // Needed for onTouchTap
 injectTapEventPlugin();
 
+const theme = getMuiTheme({
+  fontFamily: 'Roboto, sans-serif',
+  palette: {
+    primary1Color: '#fff',
+    accent1Color: purple500,
+  },
+  appBar: {
+    textColor: purple500,
+  },
+});
+
 var App = React.createClass({
   render: function() {
     return (
-      <MuiThemeProvider muiTheme={getMuiTheme()} >
+      <MuiThemeProvider muiTheme={theme} >
         <AppContent data={this.props.data} />
       </MuiThemeProvider>
     );

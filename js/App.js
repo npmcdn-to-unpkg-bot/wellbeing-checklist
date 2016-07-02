@@ -95,7 +95,7 @@ var QuestionList = React.createClass({
 var Question = React.createClass({
   render: function() {
     return (
-      <Card>
+      <Card style={this.props.answer}>
         <CardHeader title={this.props.children} />
         <QuestionButtons id={this.props.id} />
       </Card>
@@ -104,11 +104,20 @@ var Question = React.createClass({
 });
 
 const radioStyles = {
-  block: {
-    maxWidth: 250,
-  },
   radioButton: {
     marginBottom: 16,
+  },
+  radioButtonNo: {
+    color: 'green',
+    fill: 'green',
+  },
+  radioButtonSlightly: {
+    color: 'orange',
+    fill: 'orange'
+  },
+  radioButtonYes: {
+    color: 'red',
+    fill: 'red'
   },
 };
 
@@ -139,16 +148,22 @@ var QuestionButtons = React.createClass({
             value="0"
             label="No"
             style={radioStyles.radioButton}
+            labelStyle={this.state.answer == 0 ? radioStyles.radioButtonNo : null}
+            iconStyle={this.state.answer == 0 ? radioStyles.radioButtonNo : null}
           />
           <RadioButton
             value="0.5"
             label="Slightly"
             style={radioStyles.radioButton}
+            labelStyle={this.state.answer == 0.5 ? radioStyles.radioButtonSlightly : null}
+            iconStyle={this.state.answer == 0.5 ? radioStyles.radioButtonSlightly : null}
           />
           <RadioButton
             value="1"
             label="Yes"
             style={radioStyles.radioButton}
+            labelStyle={this.state.answer == 1 ? radioStyles.radioButtonYes : null}
+            iconStyle={this.state.answer == 1 ? radioStyles.radioButtonYes : null}
           />
         </RadioButtonGroup>
       </CardActions>

@@ -38,7 +38,7 @@ import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 injectTapEventPlugin();
 
 const theme = getMuiTheme({
-  fontFamily: 'Roboto, sans-serif',
+  fontFamily: 'system, -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif',
   palette: {
     primary1Color: '#fff',
     accent1Color: purple500,

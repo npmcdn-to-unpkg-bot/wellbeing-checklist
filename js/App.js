@@ -30,8 +30,9 @@ var database = firebase.database();
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import {Card, CardHeader} from 'material-ui/Card';
+import {Card, CardHeader, CardActions} from 'material-ui/Card';
 import AppBar from 'material-ui/AppBar';
+import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 // Needed for onTouchTap
 injectTapEventPlugin();
 
@@ -102,6 +103,15 @@ var Question = React.createClass({
   }
 });
 
+const radioStyles = {
+  block: {
+    maxWidth: 250,
+  },
+  radioButton: {
+    marginBottom: 16,
+  },
+};
+
 var QuestionButtons = React.createClass({
   getInitialState() {
     return {
@@ -123,29 +133,25 @@ var QuestionButtons = React.createClass({
   },
   render: function() {
     return (
-      <form name="questionButtons" id={"questionButtons" + this.props.id}>
-        <input
-          type="radio"
-          name={"question" + this.props.id + "-0"}
-          value="0"
-          onChange={this.onChange}
-          checked={this.state.answer == 0 ? true : false}
-        />No
-        <input
-          type="radio"
-          name={"question" + this.props.id + "-0.5"}
-          value="0.5"
-          onChange={this.onChange}
-          checked={this.state.answer == 0.5 ? true : false}
-        />Slightly
-        <input
-          type="radio"
-          name={"question" + this.props.id + "-1"}
-          value="1"
-          onChange={this.onChange}
-          checked={this.state.answer == 1 ? true : false}
-        />Yes
-      </form>
+      <CardActions>
+        <RadioButtonGroup name="questionButtons" defaultSelected={this.state.answer} onChange={this.onChange}>
+          <RadioButton
+            value="0"
+            label="No"
+            style={radioStyles.radioButton}
+          />
+          <RadioButton
+            value="0.5"
+            label="Slightly"
+            style={radioStyles.radioButton}
+          />
+          <RadioButton
+            value="1"
+            label="Yes"
+            style={radioStyles.radioButton}
+          />
+        </RadioButtonGroup>
+      </CardActions>
     );
   }
 });

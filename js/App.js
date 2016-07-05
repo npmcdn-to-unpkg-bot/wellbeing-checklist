@@ -52,7 +52,7 @@ var App = React.createClass({
   render: function() {
     return (
       <MuiThemeProvider muiTheme={theme} >
-        <AppContent data={this.props.data} />
+        <AppContent />
       </MuiThemeProvider>
     );
   }
@@ -105,9 +105,12 @@ var QuestionList = React.createClass({
 });
 
 var Question = React.createClass({
+  componentDidMount() {
+    console.log(QuestionButtons.state.answer);
+  },
   render: function() {
     return (
-      <Card style={this.props.answer}>
+      <Card>
         <CardHeader title={this.props.children} />
         <QuestionButtons id={this.props.id} />
       </Card>
@@ -150,12 +153,13 @@ var QuestionButtons = React.createClass({
     }.bind(this));
   },
   onChange(e) {
-    var newRef = this.databaseReference.push({"value" : e.target.value});
+    this.setState({answer : e.target.value});
+    this.databaseReference.push({"value" : this.state.answer});
   },
   render: function() {
     return (
       <CardActions>
-        <RadioButtonGroup name="questionButtons" defaultSelected={this.state.answer} onChange={this.onChange}>
+        <RadioButtonGroup name="questionButtons" defaultSelected={this.state.answer} onChange={this.onChange.bind(this)}>
           <RadioButton
             value="0"
             label="No"

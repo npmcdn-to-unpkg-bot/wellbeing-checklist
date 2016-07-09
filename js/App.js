@@ -153,7 +153,7 @@ const radioStyles = {
 var QuestionButtons = React.createClass({
   getInitialState() {
     return {
-      answer: ''
+      answer: ""
     };
   },
   componentWillMount() {
@@ -167,13 +167,13 @@ var QuestionButtons = React.createClass({
     }.bind(this));
   },
   onChange(e) {
+    this.databaseReference.push({"value" : e.target.value});
     this.setState({answer : e.target.value});
-    this.databaseReference.push({"value" : this.state.answer});
   },
   render: function() {
     return (
       <CardActions>
-        <RadioButtonGroup name="questionButtons" defaultSelected={this.state.answer} onChange={this.onChange.bind(this)}>
+        <RadioButtonGroup name="questionButtons" defaultSelected={this.state.answer} onChange={this.onChange}>
           <RadioButton
             value="0"
             label="No"

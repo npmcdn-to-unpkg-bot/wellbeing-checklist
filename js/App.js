@@ -62,8 +62,20 @@ var AppContent = React.createClass({
   render: function() {
     return (
       <div class="appContent">
-        <AppBar title={"Wellbeing Checklist – " + dateMarker} showMenuIconButton={false} />
-        <QuestionList />
+        <AppBar
+          title={"Well – " + dateMarker} showMenuIconButton={false}
+          // style={{position: 'fixed'}}
+        />
+        <div className="clearfix">
+          <div className="col col-6 px2">
+            <p className="h1">Health Perception Quiz</p>
+            <QuestionList />
+          </div>
+          <div className="col col-6 px2">
+            <p className="h1">Health Actions</p>
+            <ActionList />
+          </div>
+        </div>
       </div>
     );
   }
@@ -91,9 +103,11 @@ var QuestionList = React.createClass({
       var questionKey = question.key;
       question = question.val();
       return (
-        <Question key={questionKey} id={questionKey}>
-          {question.text}
-        </Question>
+        <div className="pb2" key={questionKey}>
+          <Question id={questionKey}>
+            {question.text}
+          </Question>
+        </div>
       )
     });
     return (

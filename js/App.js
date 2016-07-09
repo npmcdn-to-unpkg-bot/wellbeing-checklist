@@ -140,7 +140,6 @@ var ActionList = React.createClass({
     var actionNodes = this.state.actions.map(function(action) {
       var actionKey = action.key;
       action = action.val();
-      console.log(action);
       return (
         <Action key={actionKey} id={actionKey}>
           {action.text}

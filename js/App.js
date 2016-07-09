@@ -68,11 +68,11 @@ var AppContent = React.createClass({
           // style={{position: 'fixed'}}
         />
         <div className="clearfix">
-          <div className="col col-6 px2">
+          <div className="col lg-col-6 md-col-6 px2">
             <p className="h1">Health Perception Quiz</p>
             <QuestionList />
           </div>
-          <div className="col col-6 px2">
+          <div className="col lg-col-6 md-col-6 px2">
             <p className="h1">Health Actions</p>
             <ActionList />
           </div>

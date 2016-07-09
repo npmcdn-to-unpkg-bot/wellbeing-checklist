@@ -34,6 +34,7 @@ import {Card, CardHeader, CardActions} from 'material-ui/Card';
 import {purple500} from 'material-ui/styles/colors'
 import AppBar from 'material-ui/AppBar';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
+import Checkbox from 'material-ui/Checkbox';
 // Needed for onTouchTap
 injectTapEventPlugin();
 
@@ -118,10 +119,51 @@ var QuestionList = React.createClass({
   }
 });
 
-var Question = React.createClass({
-  componentDidMount() {
-    console.log(QuestionButtons.state.answer);
+var ActionList = React.createClass({
+  mixins: [ReactFireMixin],
+  getInitialState() {
+      return {
+        actions: []
+      };
   },
+  componentWillMount() {
+    database.ref('actions').on('value', function(snapshot) {
+      var actions = [];
+      snapshot.forEach(function(childSnapshot) {
+        var action = childSnapshot;
+        actions.push(action);
+      }.bind(this));
+      this.setState ({actions : actions});
+    }.bind(this));
+  },
+  render: function() {
+    var actionNodes = this.state.actions.map(function(action) {
+      var actionKey = action.key;
+      action = action.val();
+      console.log(action);
+      return (
+        <Action key={actionKey} id={actionKey}>
+          {action.text}
+        </Action>
+      )
+    });
+    return (
+      <div class="actionList">
+        {actionNodes}
+      </div>
+    );
+  }
+});
+
+var Action = React.createClass({
+  render: function() {
+    return (
+      <Checkbox label={this.props.children} />
+    );
+  }
+});
+
+var Question = React.createClass({
   render: function() {
     return (
       <Card>
@@ -200,6 +242,8 @@ var QuestionButtons = React.createClass({
     );
   }
 });
+
+
 
 ReactDOM.render(
   <App />,

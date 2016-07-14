@@ -62,10 +62,9 @@ var App = React.createClass({
 var AppContent = React.createClass({
   render: function() {
     return (
-      <div class="appContent">
+      <div className="appContent">
         <AppBar
           title={"Well – " + dateMarker} showMenuIconButton={false}
-          // style={{position: 'fixed'}}
         />
         <div className="clearfix">
           <div className="col lg-col-6 md-col-6 px2">
@@ -86,7 +85,8 @@ var QuestionList = React.createClass({
   mixins: [ReactFireMixin],
   getInitialState() {
       return {
-        questions: []
+        questions: [],
+        answers: []
       };
   },
   componentWillMount() {
@@ -112,10 +112,13 @@ var QuestionList = React.createClass({
       )
     });
     return (
-      <div class="questionList">
+      <div className="questionList">
         {questionNodes}
       </div>
     );
+  },
+  componentDidMount() {
+
   }
 });
 
@@ -147,7 +150,7 @@ var ActionList = React.createClass({
       )
     });
     return (
-      <div class="actionList">
+      <div className="actionList">
         {actionNodes}
       </div>
     );
@@ -191,6 +194,8 @@ const radioStyles = {
   },
 };
 
+var Agg = 0;
+
 var QuestionButtons = React.createClass({
   getInitialState() {
     return {
@@ -206,6 +211,8 @@ var QuestionButtons = React.createClass({
       }.bind(this));
       this.setState ({answer : answer.value});
     }.bind(this));
+    console.log(this.state.answer);
+    Agg += this.state.answer;
   },
   onChange(e) {
     this.databaseReference.push({"value" : e.target.value});

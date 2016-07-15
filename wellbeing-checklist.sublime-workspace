@@ -327,8 +327,13 @@
 		"side_bar_visible": false,
 		"status_bar_visible": false
 	},
+	"expanded_folders":
+	[
+		"/Users/jaybowles/Repositories/wellbeing-checklist"
+	],
 	"file_history":
 	[
+		"/Users/jaybowles/Repositories/wellbeing-checklist/wellbeing-checklist.sublime-project",
 		"/Users/jaybowles/repositories/wellbeing-checklist/package.json",
 		"/Users/jaybowles/Repositories/wellbeing-checklist/gulpfile.js",
 		"/Users/jaybowles/repositories/wellbeing-checklist/firebase.json",
@@ -455,12 +460,11 @@
 		"/Users/jaybowles/Google Drive/code/bridgeu/app/assets/stylesheets/pages/advisor_marketing.scss",
 		"/Users/jaybowles/Google Drive/code/bridgeu/app/assets/stylesheets/modules/material-navbar.scss",
 		"/Users/jaybowles/Google Drive/code/bridgeu/app/assets/stylesheets/pages/marketing_pages.scss",
-		"/Users/jaybowles/Google Drive/code/bridgeu/app/assets/stylesheets/site/_responsive-utilities.scss",
-		"/Users/jaybowles/Google Drive/code/bridgeu/app/controllers/users_controller.rb"
+		"/Users/jaybowles/Google Drive/code/bridgeu/app/assets/stylesheets/site/_responsive-utilities.scss"
 	],
 	"find":
 	{
-		"height": 37.0
+		"height": 29.0
 	},
 	"find_in_files":
 	{

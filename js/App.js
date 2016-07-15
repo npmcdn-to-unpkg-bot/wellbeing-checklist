@@ -1,3 +1,4 @@
+// Import React
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {ReactFire, ReactFireMixin} from 'reactfire';
@@ -11,17 +12,20 @@ var theYear = today.getFullYear();
 var theDay = Math.round(((today - first) / 1000 / 60 / 60 / 24) + .5, 0);
 var dateMarker = theDay.toString() + "-" + theYear;
 
-//
+
 // Setup Firebase
-//
-//// Configure Firebase
+
+//// Import Firebase
 import Firebase from 'firebase';
+
+//// Configure Firebase
 var config = {
   apiKey: "AIzaSyCbNEewyeYO1L-UI4PpU3bAkyHmKoA30NY",
   authDomain: "wellbeing-checklist.firebaseapp.com",
   databaseURL: "https://wellbeing-checklist.firebaseio.com",
   storageBucket: "wellbeing-checklist.appspot.com",
 };
+
 //// Initialize Firebase
 Firebase.initializeApp(config);
 var database = firebase.database();
@@ -31,7 +35,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import {Card, CardHeader, CardActions} from 'material-ui/Card';
-import {purple500} from 'material-ui/styles/colors'
+import {green700, orange500, red500, white} from 'material-ui/styles/colors'
 import AppBar from 'material-ui/AppBar';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Checkbox from 'material-ui/Checkbox';
@@ -41,11 +45,10 @@ injectTapEventPlugin();
 const theme = getMuiTheme({
   fontFamily: 'system, -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif',
   palette: {
-    primary1Color: '#fff',
-    accent1Color: purple500,
+    primary1Color: green700,
   },
   appBar: {
-    textColor: purple500,
+    textColor: white,
   },
 });
 
@@ -69,11 +72,11 @@ var AppContent = React.createClass({
         />
         <div className="clearfix">
           <div className="col lg-col-6 md-col-6 px2">
-            <p className="h1">Health Perception Quiz</p>
+            <p className="h3">How are you today?</p>
             <QuestionList />
           </div>
           <div className="col lg-col-6 md-col-6 px2">
-            <p className="h1">Health Actions</p>
+            <p className="h3">Health todos:</p>
             <ActionList />
           </div>
         </div>
@@ -141,9 +144,11 @@ var ActionList = React.createClass({
       var actionKey = action.key;
       action = action.val();
       return (
-        <Action key={actionKey} id={actionKey}>
-          {action.text}
-        </Action>
+        <div className="pb2" key={actionKey}>
+          <Action id={actionKey}>
+            {action.text}
+          </Action>
+        </div>
       )
     });
     return (
@@ -155,9 +160,33 @@ var ActionList = React.createClass({
 });
 
 var Action = React.createClass({
+  getInitialState() {
+      return {
+          switched: false
+      };
+  },
+  componentWillMount() {
+    this.databaseReference = database.ref('actions/' + this.props.id + '/answers/' + dateMarker + '/');
+    this.databaseReference.limitToLast(1).on('value', function(snapshot) {
+      var switched = '';
+      snapshot.forEach(function(childSnapshot) {
+        switched = childSnapshot.val();
+      }.bind(this));
+      this.setState ({switched : switched});
+    }.bind(this));
+  },
+  // onCheck() {
+  //   this.setState({switched : !this.state.switched});
+  //   console.log(!this.state.switched);
+  //   this.databaseReference.set({"value" : this.state.switched});
+  // },
   render: function() {
     return (
-      <Checkbox label={this.props.children} />
+      <Checkbox
+        label={this.props.children}
+        checked
+        // onCheck={this.onCheck}
+      />
     );
   }
 });
@@ -178,16 +207,16 @@ const radioStyles = {
     marginBottom: 16,
   },
   radioButtonNo: {
-    color: 'green',
-    fill: 'green',
+    color: green700,
+    fill: green700,
   },
   radioButtonSlightly: {
-    color: 'orange',
-    fill: 'orange'
+    color: orange500,
+    fill: orange500
   },
   radioButtonYes: {
-    color: 'red',
-    fill: 'red'
+    color: red500,
+    fill: red500
   },
 };
 
@@ -208,13 +237,24 @@ var QuestionButtons = React.createClass({
     }.bind(this));
   },
   onChange(e) {
-    this.databaseReference.push({"value" : e.target.value});
-    this.setState({answer : e.target.value});
+    this.setState({
+      answer: e.target.value
+    });
+    this.databaseReference.push({
+      "value": e.target.value
+    });
+    database.ref('questions/' + this.props.id).update({
+      "last-answer-time": new Date()
+    });
   },
   render: function() {
     return (
       <CardActions>
-        <RadioButtonGroup name="questionButtons" defaultSelected={this.state.answer} onChange={this.onChange}>
+        <RadioButtonGroup
+          name="questionButtons"
+          defaultSelected={this.state.answer}
+          onChange={this.onChange}
+        >
           <RadioButton
             value="0"
             label="No"

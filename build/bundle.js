@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "0695839b7eb5b431b892"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "be784b8128460bc9bcbe"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -741,17 +741,24 @@
 
 	var _Card = __webpack_require__(353);
 
+	var _colors = __webpack_require__(305);
+
 	var _AppBar = __webpack_require__(402);
 
 	var _AppBar2 = _interopRequireDefault(_AppBar);
 
 	var _RadioButton = __webpack_require__(405);
 
+	var _Checkbox = __webpack_require__(412);
+
+	var _Checkbox2 = _interopRequireDefault(_Checkbox);
+
 	function _interopRequireDefault(obj) {
 	  return obj && obj.__esModule ? obj : { default: obj };
 	}
 
 	// Setup Dates
+	// Import React
 	var today = new Date();
 	var first = new Date(today.getFullYear(), 0, 1);
 	var theDay = today.getDay();
@@ -759,17 +766,18 @@
 	var theDay = Math.round((today - first) / 1000 / 60 / 60 / 24 + .5, 0);
 	var dateMarker = theDay.toString() + "-" + theYear;
 
-	//
 	// Setup Firebase
-	//
-	//// Configure Firebase
 
+	//// Import Firebase
+
+	//// Configure Firebase
 	var config = {
 	  apiKey: "AIzaSyCbNEewyeYO1L-UI4PpU3bAkyHmKoA30NY",
 	  authDomain: "wellbeing-checklist.firebaseapp.com",
 	  databaseURL: "https://wellbeing-checklist.firebaseio.com",
 	  storageBucket: "wellbeing-checklist.appspot.com"
 	};
+
 	//// Initialize Firebase
 	_firebase2.default.initializeApp(config);
 	var database = firebase.database();
@@ -779,11 +787,21 @@
 	// Needed for onTouchTap
 	(0, _reactTapEventPlugin2.default)();
 
+	var theme = (0, _getMuiTheme2.default)({
+	  fontFamily: 'system, -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif',
+	  palette: {
+	    primary1Color: _colors.green700
+	  },
+	  appBar: {
+	    textColor: _colors.white
+	  }
+	});
+
 	var App = _react2.default.createClass({
 	  displayName: 'App',
 
 	  render: function render() {
-	    return _react2.default.createElement(_MuiThemeProvider2.default, { muiTheme: (0, _getMuiTheme2.default)() }, _react2.default.createElement(AppContent, { data: this.props.data }));
+	    return _react2.default.createElement(_MuiThemeProvider2.default, { muiTheme: theme }, _react2.default.createElement(AppContent, null));
 	  }
 	});
 
@@ -791,7 +809,10 @@
 	  displayName: 'AppContent',
 
 	  render: function render() {
-	    return _react2.default.createElement('div', { 'class': 'appContent' }, _react2.default.createElement(_AppBar2.default, { title: "Wellbeing Checklist – " + dateMarker, showMenuIconButton: false }), _react2.default.createElement(QuestionList, null));
+	    return _react2.default.createElement('div', { 'class': 'appContent' }, _react2.default.createElement(_AppBar2.default, {
+	      title: "Well – " + dateMarker, showMenuIconButton: false
+	      // style={{position: 'fixed'}}
+	    }), _react2.default.createElement('div', { className: 'clearfix' }, _react2.default.createElement('div', { className: 'col lg-col-6 md-col-6 px2' }, _react2.default.createElement('p', { className: 'h3' }, 'How are you today?'), _react2.default.createElement(QuestionList, null)), _react2.default.createElement('div', { className: 'col lg-col-6 md-col-6 px2' }, _react2.default.createElement('p', { className: 'h3' }, 'Health todos:'), _react2.default.createElement(ActionList, null))));
 	  }
 	});
 
@@ -819,9 +840,71 @@
 	    var questionNodes = this.state.questions.map(function (question) {
 	      var questionKey = question.key;
 	      question = question.val();
-	      return _react2.default.createElement(Question, { key: questionKey, id: questionKey }, question.text);
+	      return _react2.default.createElement('div', { className: 'pb2', key: questionKey }, _react2.default.createElement(Question, { id: questionKey }, question.text));
 	    });
 	    return _react2.default.createElement('div', { 'class': 'questionList' }, questionNodes);
+	  }
+	});
+
+	var ActionList = _react2.default.createClass({
+	  displayName: 'ActionList',
+
+	  mixins: [_reactfire.ReactFireMixin],
+	  getInitialState: function getInitialState() {
+	    return {
+	      actions: []
+	    };
+	  },
+	  componentWillMount: function componentWillMount() {
+	    database.ref('actions').on('value', function (snapshot) {
+	      var actions = [];
+	      snapshot.forEach(function (childSnapshot) {
+	        var action = childSnapshot;
+	        actions.push(action);
+	      }.bind(this));
+	      this.setState({ actions: actions });
+	    }.bind(this));
+	  },
+
+	  render: function render() {
+	    var actionNodes = this.state.actions.map(function (action) {
+	      var actionKey = action.key;
+	      action = action.val();
+	      return _react2.default.createElement('div', { className: 'pb2', key: actionKey }, _react2.default.createElement(Action, { id: actionKey }, action.text));
+	    });
+	    return _react2.default.createElement('div', { 'class': 'actionList' }, actionNodes);
+	  }
+	});
+
+	var Action = _react2.default.createClass({
+	  displayName: 'Action',
+	  getInitialState: function getInitialState() {
+	    return {
+	      switched: false
+	    };
+	  },
+	  componentWillMount: function componentWillMount() {
+	    this.databaseReference = database.ref('actions/' + this.props.id + '/answers/' + dateMarker + '/');
+	    this.databaseReference.limitToLast(1).on('value', function (snapshot) {
+	      var switched = '';
+	      snapshot.forEach(function (childSnapshot) {
+	        switched = childSnapshot.val();
+	      }.bind(this));
+	      this.setState({ switched: switched });
+	    }.bind(this));
+	  },
+
+	  // onCheck() {
+	  //   this.setState({switched : !this.state.switched});
+	  //   console.log(!this.state.switched);
+	  //   this.databaseReference.set({"value" : this.state.switched});
+	  // },
+	  render: function render() {
+	    return _react2.default.createElement(_Checkbox2.default, {
+	      label: this.props.children,
+	      checked: true
+	      // onCheck={this.onCheck}
+	    });
 	  }
 	});
 
@@ -834,11 +917,20 @@
 	});
 
 	var radioStyles = {
-	  block: {
-	    maxWidth: 250
-	  },
 	  radioButton: {
 	    marginBottom: 16
+	  },
+	  radioButtonNo: {
+	    color: _colors.green700,
+	    fill: _colors.green700
+	  },
+	  radioButtonSlightly: {
+	    color: _colors.orange500,
+	    fill: _colors.orange500
+	  },
+	  radioButtonYes: {
+	    color: _colors.red500,
+	    fill: _colors.red500
 	  }
 	};
 
@@ -846,7 +938,7 @@
 	  displayName: 'QuestionButtons',
 	  getInitialState: function getInitialState() {
 	    return {
-	      answer: ''
+	      answer: ""
 	    };
 	  },
 	  componentWillMount: function componentWillMount() {
@@ -860,29 +952,47 @@
 	    }.bind(this));
 	  },
 	  onChange: function onChange(e) {
-	    var newRef = this.databaseReference.push({ "value": e.target.value });
+	    this.setState({
+	      answer: e.target.value
+	    });
+	    this.databaseReference.push({
+	      "value": e.target.value
+	    });
+	    database.ref('questions/' + this.props.id).update({
+	      "last-answer-time": new Date()
+	    });
 	  },
 
 	  render: function render() {
-	    return _react2.default.createElement(_Card.CardActions, null, _react2.default.createElement(_RadioButton.RadioButtonGroup, { name: 'questionButtons', defaultSelected: this.state.answer, onChange: this.onChange }, _react2.default.createElement(_RadioButton.RadioButton, {
+	    return _react2.default.createElement(_Card.CardActions, null, _react2.default.createElement(_RadioButton.RadioButtonGroup, {
+	      name: 'questionButtons',
+	      defaultSelected: this.state.answer,
+	      onChange: this.onChange
+	    }, _react2.default.createElement(_RadioButton.RadioButton, {
 	      value: '0',
 	      label: 'No',
-	      style: radioStyles.radioButton
+	      style: radioStyles.radioButton,
+	      labelStyle: this.state.answer == 0 ? radioStyles.radioButtonNo : null,
+	      iconStyle: this.state.answer == 0 ? radioStyles.radioButtonNo : null
 	    }), _react2.default.createElement(_RadioButton.RadioButton, {
 	      value: '0.5',
 	      label: 'Slightly',
-	      style: radioStyles.radioButton
+	      style: radioStyles.radioButton,
+	      labelStyle: this.state.answer == 0.5 ? radioStyles.radioButtonSlightly : null,
+	      iconStyle: this.state.answer == 0.5 ? radioStyles.radioButtonSlightly : null
 	    }), _react2.default.createElement(_RadioButton.RadioButton, {
 	      value: '1',
 	      label: 'Yes',
-	      style: radioStyles.radioButton
+	      style: radioStyles.radioButton,
+	      labelStyle: this.state.answer == 1 ? radioStyles.radioButtonYes : null,
+	      iconStyle: this.state.answer == 1 ? radioStyles.radioButtonYes : null
 	    })));
 	  }
 	});
 
 	_reactDom2.default.render(_react2.default.createElement(App, null), document.getElementById('react'));
 
-	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(412); if (makeExportsHot(module, __webpack_require__(79))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "App.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(417); if (makeExportsHot(module, __webpack_require__(79))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "App.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
 
 /***/ },
@@ -36635,8 +36745,410 @@
 
 	'use strict';
 
-	var isReactClassish = __webpack_require__(413),
-	    isReactElementish = __webpack_require__(414);
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = undefined;
+
+	var _Checkbox = __webpack_require__(413);
+
+	var _Checkbox2 = _interopRequireDefault(_Checkbox);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _Checkbox2.default;
+
+/***/ },
+/* 413 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _simpleAssign = __webpack_require__(355);
+
+	var _simpleAssign2 = _interopRequireDefault(_simpleAssign);
+
+	var _react = __webpack_require__(79);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _EnhancedSwitch = __webpack_require__(407);
+
+	var _EnhancedSwitch2 = _interopRequireDefault(_EnhancedSwitch);
+
+	var _transitions = __webpack_require__(359);
+
+	var _transitions2 = _interopRequireDefault(_transitions);
+
+	var _checkBoxOutlineBlank = __webpack_require__(414);
+
+	var _checkBoxOutlineBlank2 = _interopRequireDefault(_checkBoxOutlineBlank);
+
+	var _checkBox = __webpack_require__(415);
+
+	var _checkBox2 = _interopRequireDefault(_checkBox);
+
+	var _deprecatedPropType = __webpack_require__(416);
+
+	var _deprecatedPropType2 = _interopRequireDefault(_deprecatedPropType);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function getStyles(props, context) {
+	  var checkbox = context.muiTheme.checkbox;
+
+	  var checkboxSize = 24;
+
+	  return {
+	    icon: {
+	      height: checkboxSize,
+	      width: checkboxSize
+	    },
+	    check: {
+	      position: 'absolute',
+	      opacity: 0,
+	      transform: 'scale(0)',
+	      transitionOrigin: '50% 50%',
+	      transition: _transitions2.default.easeOut('450ms', 'opacity', '0ms') + ', ' + _transitions2.default.easeOut('0ms', 'transform', '450ms'),
+	      fill: checkbox.checkedColor
+	    },
+	    box: {
+	      position: 'absolute',
+	      opacity: 1,
+	      fill: checkbox.boxColor,
+	      transition: _transitions2.default.easeOut('2s', null, '200ms')
+	    },
+	    checkWhenSwitched: {
+	      opacity: 1,
+	      transform: 'scale(1)',
+	      transition: _transitions2.default.easeOut('0ms', 'opacity', '0ms') + ', ' + _transitions2.default.easeOut('800ms', 'transform', '0ms')
+	    },
+	    boxWhenSwitched: {
+	      transition: _transitions2.default.easeOut('100ms', null, '0ms'),
+	      fill: checkbox.checkedColor
+	    },
+	    checkWhenDisabled: {
+	      fill: checkbox.disabledColor
+	    },
+	    boxWhenDisabled: {
+	      fill: props.checked ? 'transparent' : checkbox.disabledColor
+	    },
+	    label: {
+	      color: props.disabled ? checkbox.labelDisabledColor : checkbox.labelColor
+	    }
+	  };
+	}
+
+	var Checkbox = function (_Component) {
+	  _inherits(Checkbox, _Component);
+
+	  function Checkbox() {
+	    var _Object$getPrototypeO;
+
+	    var _temp, _this, _ret;
+
+	    _classCallCheck(this, Checkbox);
+
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Checkbox)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = { switched: false }, _this.handleCheck = function (event, isInputChecked) {
+	      if (_this.props.onCheck) _this.props.onCheck(event, isInputChecked);
+	    }, _this.handleStateChange = function (newSwitched) {
+	      _this.setState({ switched: newSwitched });
+	    }, _temp), _possibleConstructorReturn(_this, _ret);
+	  }
+
+	  _createClass(Checkbox, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      var _props = this.props;
+	      var checked = _props.checked;
+	      var defaultChecked = _props.defaultChecked;
+	      var valueLink = _props.valueLink;
+
+
+	      if (checked || defaultChecked || valueLink && valueLink.value) {
+	        this.setState({ switched: true });
+	      }
+	    }
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      this.setState({
+	        switched: this.props.checked !== nextProps.checked ? nextProps.checked : this.state.switched
+	      });
+	    }
+	  }, {
+	    key: 'isChecked',
+	    value: function isChecked() {
+	      return this.refs.enhancedSwitch.isSwitched();
+	    }
+	  }, {
+	    key: 'setChecked',
+	    value: function setChecked(newCheckedValue) {
+	      this.refs.enhancedSwitch.setSwitched(newCheckedValue);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _props2 = this.props;
+	      var iconStyle = _props2.iconStyle;
+	      var onCheck = _props2.onCheck;
+	      var // eslint-disable-line no-unused-vars
+	      checkedIcon = _props2.checkedIcon;
+	      var uncheckedIcon = _props2.uncheckedIcon;
+	      var unCheckedIcon = _props2.unCheckedIcon;
+
+	      var other = _objectWithoutProperties(_props2, ['iconStyle', 'onCheck', 'checkedIcon', 'uncheckedIcon', 'unCheckedIcon']);
+
+	      var styles = getStyles(this.props, this.context);
+	      var boxStyles = (0, _simpleAssign2.default)(styles.box, this.state.switched && styles.boxWhenSwitched, iconStyle, this.props.disabled && styles.boxWhenDisabled);
+	      var checkStyles = (0, _simpleAssign2.default)(styles.check, this.state.switched && styles.checkWhenSwitched, iconStyle, this.props.disabled && styles.checkWhenDisabled);
+
+	      var checkedElement = checkedIcon ? _react2.default.cloneElement(checkedIcon, {
+	        style: (0, _simpleAssign2.default)(checkStyles, checkedIcon.props.style)
+	      }) : _react2.default.createElement(_checkBox2.default, {
+	        style: checkStyles
+	      });
+
+	      var unCheckedElement = unCheckedIcon || uncheckedIcon ? _react2.default.cloneElement(unCheckedIcon || uncheckedIcon, {
+	        style: (0, _simpleAssign2.default)(boxStyles, (unCheckedIcon || uncheckedIcon).props.style)
+	      }) : _react2.default.createElement(_checkBoxOutlineBlank2.default, {
+	        style: boxStyles
+	      });
+
+	      var checkboxElement = _react2.default.createElement(
+	        'div',
+	        null,
+	        unCheckedElement,
+	        checkedElement
+	      );
+
+	      var rippleColor = this.state.switched ? checkStyles.fill : boxStyles.fill;
+	      var mergedIconStyle = (0, _simpleAssign2.default)(styles.icon, iconStyle);
+
+	      var labelStyle = (0, _simpleAssign2.default)(styles.label, this.props.labelStyle);
+
+	      var enhancedSwitchProps = {
+	        ref: 'enhancedSwitch',
+	        inputType: 'checkbox',
+	        switched: this.state.switched,
+	        switchElement: checkboxElement,
+	        rippleColor: rippleColor,
+	        iconStyle: mergedIconStyle,
+	        onSwitch: this.handleCheck,
+	        labelStyle: labelStyle,
+	        onParentShouldUpdate: this.handleStateChange,
+	        labelPosition: this.props.labelPosition
+	      };
+
+	      return _react2.default.createElement(_EnhancedSwitch2.default, _extends({}, other, enhancedSwitchProps));
+	    }
+	  }]);
+
+	  return Checkbox;
+	}(_react.Component);
+
+	Checkbox.propTypes = {
+	  /**
+	   * Checkbox is checked if true.
+	   */
+	  checked: _react.PropTypes.bool,
+	  /**
+	   * The SvgIcon to use for the checked state.
+	   * This is useful to create icon toggles.
+	   */
+	  checkedIcon: _react.PropTypes.element,
+	  /**
+	   * The default state of our checkbox component.
+	   * **Warning:** This cannot be used in conjunction with `checked`.
+	   * Decide between using a controlled or uncontrolled input element and remove one of these props.
+	   * More info: https://fb.me/react-controlled-components
+	   */
+	  defaultChecked: _react.PropTypes.bool,
+	  /**
+	   * Disabled if true.
+	   */
+	  disabled: _react.PropTypes.bool,
+	  /**
+	   * Overrides the inline-styles of the icon element.
+	   */
+	  iconStyle: _react.PropTypes.object,
+	  /**
+	   * Overrides the inline-styles of the input element.
+	   */
+	  inputStyle: _react.PropTypes.object,
+	  /**
+	   * Where the label will be placed next to the checkbox.
+	   */
+	  labelPosition: _react.PropTypes.oneOf(['left', 'right']),
+	  /**
+	   * Overrides the inline-styles of the Checkbox element label.
+	   */
+	  labelStyle: _react.PropTypes.object,
+	  /**
+	   * Callback function that is fired when the checkbox is checked.
+	   *
+	   * @param {object} event `change` event targeting the underlying checkbox `input`.
+	   * @param {boolean} isInputChecked The `checked` value of the underlying checkbox `input`.
+	   */
+	  onCheck: _react.PropTypes.func,
+	  /**
+	   * Override the inline-styles of the root element.
+	   */
+	  style: _react.PropTypes.object,
+	  /**
+	   * The SvgIcon to use for the unchecked state.
+	   * This is useful to create icon toggles.
+	   */
+	  unCheckedIcon: (0, _deprecatedPropType2.default)(_react.PropTypes.element, 'Use uncheckedIcon instead.'),
+	  /**
+	   * The SvgIcon to use for the unchecked state.
+	   * This is useful to create icon toggles.
+	   */
+	  uncheckedIcon: _react.PropTypes.element,
+	  /**
+	   * ValueLink for when using controlled checkbox.
+	   */
+	  valueLink: _react.PropTypes.object
+	};
+	Checkbox.defaultProps = {
+	  labelPosition: 'right',
+	  disabled: false
+	};
+	Checkbox.contextTypes = {
+	  muiTheme: _react.PropTypes.object.isRequired
+	};
+	exports.default = Checkbox;
+
+/***/ },
+/* 414 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(79);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _pure = __webpack_require__(362);
+
+	var _pure2 = _interopRequireDefault(_pure);
+
+	var _SvgIcon = __webpack_require__(371);
+
+	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var ToggleCheckBoxOutlineBlank = function ToggleCheckBoxOutlineBlank(props) {
+	  return _react2.default.createElement(
+	    _SvgIcon2.default,
+	    props,
+	    _react2.default.createElement('path', { d: 'M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z' })
+	  );
+	};
+	ToggleCheckBoxOutlineBlank = (0, _pure2.default)(ToggleCheckBoxOutlineBlank);
+	ToggleCheckBoxOutlineBlank.displayName = 'ToggleCheckBoxOutlineBlank';
+	ToggleCheckBoxOutlineBlank.muiName = 'SvgIcon';
+
+	exports.default = ToggleCheckBoxOutlineBlank;
+
+/***/ },
+/* 415 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(79);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _pure = __webpack_require__(362);
+
+	var _pure2 = _interopRequireDefault(_pure);
+
+	var _SvgIcon = __webpack_require__(371);
+
+	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var ToggleCheckBox = function ToggleCheckBox(props) {
+	  return _react2.default.createElement(
+	    _SvgIcon2.default,
+	    props,
+	    _react2.default.createElement('path', { d: 'M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' })
+	  );
+	};
+	ToggleCheckBox = (0, _pure2.default)(ToggleCheckBox);
+	ToggleCheckBox.displayName = 'ToggleCheckBox';
+	ToggleCheckBox.muiName = 'SvgIcon';
+
+	exports.default = ToggleCheckBox;
+
+/***/ },
+/* 416 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = deprecated;
+
+	var _warning = __webpack_require__(341);
+
+	var _warning2 = _interopRequireDefault(_warning);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function deprecated(propType, explanation) {
+	  return function validate(props, propName, componentName) {
+	    if (props[propName] != null) {
+	      process.env.NODE_ENV !== "production" ? (0, _warning2.default)(false, '"' + propName + '" property of "' + componentName + '" has been deprecated.\n' + explanation) : void 0;
+	    }
+
+	    return propType(props, propName, componentName);
+	  };
+	}
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+
+/***/ },
+/* 417 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var isReactClassish = __webpack_require__(418),
+	    isReactElementish = __webpack_require__(419);
 
 	function makeExportsHot(m, React) {
 	  if (isReactElementish(m.exports, React)) {
@@ -36690,7 +37202,7 @@
 
 
 /***/ },
-/* 413 */
+/* 418 */
 /***/ function(module, exports) {
 
 	function hasRender(Class) {
@@ -36740,10 +37252,10 @@
 	module.exports = isReactClassish;
 
 /***/ },
-/* 414 */
+/* 419 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isReactClassish = __webpack_require__(413);
+	var isReactClassish = __webpack_require__(418);
 
 	function isReactElementish(obj, React) {
 	  if (!obj) {

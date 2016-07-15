@@ -76,7 +76,7 @@ var AppContent = React.createClass({
             <QuestionList />
           </div>
           <div className="col lg-col-6 md-col-6 px2">
-            <p className="h3">Health todos:</p>
+            <p className="h3">Wellbeing Checklist</p>
             <ActionList />
           </div>
         </div>
@@ -93,7 +93,7 @@ var QuestionList = React.createClass({
       };
   },
   componentWillMount() {
-    database.ref('questions').on('value', function(snapshot) {
+    database.ref('questions').orderByChild('last-answer-time').on('value', function(snapshot) {
       var questions = [];
       snapshot.forEach(function(childSnapshot) {
         var question = childSnapshot;

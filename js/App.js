@@ -119,7 +119,14 @@ var QuestionList = React.createClass({
         {questionNodes}
       </div>
     );
-  }
+  },
+  componentWillUpdate() {
+    this.scrolled = document.body.scrollTop;
+    console.log(this.scrolled);
+  },
+  componentDidUpdate() {
+      window.scrollTo(0, this.scrolled);
+  },
 });
 
 var ActionList = React.createClass({

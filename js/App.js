@@ -30,15 +30,18 @@ var config = {
 Firebase.initializeApp(config);
 var database = firebase.database();
 
-// Material UI stuff
+// Import Material components
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import {Card, CardHeader, CardActions} from 'material-ui/Card';
+import {Card, CardText, CardActions} from 'material-ui/Card';
 import {green700, orange500, red500, white} from 'material-ui/styles/colors'
 import AppBar from 'material-ui/AppBar';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Checkbox from 'material-ui/Checkbox';
+import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
+import DeleteIcon from 'material-ui/svg-icons/action/delete';
 // Needed for onTouchTap
 injectTapEventPlugin();
 
@@ -108,9 +111,7 @@ var QuestionList = React.createClass({
       question = question.val();
       return (
         <div className="pb2" key={questionKey}>
-          <Question id={questionKey}>
-            {question.text}
-          </Question>
+          <Question id={questionKey} questionText={question.text}></Question>
         </div>
       )
     });
@@ -122,11 +123,47 @@ var QuestionList = React.createClass({
   },
   componentWillUpdate() {
     this.scrolled = document.body.scrollTop;
-    console.log(this.scrolled);
   },
   componentDidUpdate() {
       window.scrollTo(0, this.scrolled);
   },
+});
+
+var Question = React.createClass({
+  questionTextChange(e) {
+    database.ref('questions/' + this.props.id).set({"text": e.target.value});
+    console.log(e.target.value);
+  },
+  deleteQuestion() {
+    database.ref('questions/' + this.props.id).remove();
+  },
+  render: function() {
+    return (
+      <Card>
+        <CardText>
+          <TextField
+            defaultValue={this.props.questionText}
+            fullWidth={true}
+            multiLine={true}
+            id={this.props.id}
+            onKeyUp={this.questionTextChange}
+          />
+        </CardText>
+        <CardText>
+          <QuestionButtons id={this.props.id} />
+        </CardText>
+        <CardActions>
+          <FlatButton
+            icon={<DeleteIcon />}
+            label="Delete"
+            rippleColor={red500}
+            hoverColor={red500}
+            onClick={this.deleteQuestion}
+          />
+        </CardActions>
+      </Card>
+    );
+  }
 });
 
 var ActionList = React.createClass({
@@ -194,17 +231,6 @@ var Action = React.createClass({
         checked
         // onCheck={this.onCheck}
       />
-    );
-  }
-});
-
-var Question = React.createClass({
-  render: function() {
-    return (
-      <Card>
-        <CardHeader title={this.props.children} />
-        <QuestionButtons id={this.props.id} />
-      </Card>
     );
   }
 });

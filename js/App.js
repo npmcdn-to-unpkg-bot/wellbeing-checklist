@@ -42,6 +42,8 @@ import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import DeleteIcon from 'material-ui/svg-icons/action/delete';
+import AddIcon from 'material-ui/svg-icons/content/add';
+import Snackbar from 'material-ui/Snackbar';
 // Needed for onTouchTap
 injectTapEventPlugin();
 
@@ -66,16 +68,32 @@ var App = React.createClass({
 });
 
 var AppContent = React.createClass({
+  getInitialState() {
+      return {
+        open: false
+      };
+  },
+  addQuestion() {
+    database.ref('questions/').push({"text": ""});
+  },
   render: function() {
     return (
       <div class="appContent">
         <AppBar
-          title={"Well – " + dateMarker} showMenuIconButton={false}
-          // style={{position: 'fixed'}}
+          title={"Well – " + new Date()} showMenuIconButton={false}
         />
         <div className="clearfix">
           <div className="col lg-col-6 md-col-6 px2">
-            <p className="h3">How are you today?</p>
+            <div className="clearfix">
+              <p className="h3 left">How are you today?</p>
+              <div className="right">
+                <FlatButton
+                  label="Add question"
+                  icon={<AddIcon />}
+                  onTouchTap={this.addQuestion}
+                />
+              </div>
+            </div>
             <QuestionList />
           </div>
           <div className="col lg-col-6 md-col-6 px2">
@@ -83,6 +101,11 @@ var AppContent = React.createClass({
             <ActionList />
           </div>
         </div>
+        <Snackbar
+          open={this.state.open}
+          message="Question deleted"
+          autoHideDuration={4000}
+        />
       </div>
     );
   }
@@ -132,10 +155,13 @@ var QuestionList = React.createClass({
 var Question = React.createClass({
   questionTextChange(e) {
     database.ref('questions/' + this.props.id).set({"text": e.target.value});
-    console.log(e.target.value);
   },
   deleteQuestion() {
     database.ref('questions/' + this.props.id).remove();
+    database.ref('questions/' + this.props.id).once('child_removed')
+      .then(function(dataSnapshot) {
+        this.setState({open: true});
+      }.bind(this));
   },
   render: function() {
     return (
@@ -158,7 +184,7 @@ var Question = React.createClass({
             label="Delete"
             rippleColor={red500}
             hoverColor={red500}
-            onClick={this.deleteQuestion}
+            onTouchTap={this.deleteQuestion}
           />
         </CardActions>
       </Card>

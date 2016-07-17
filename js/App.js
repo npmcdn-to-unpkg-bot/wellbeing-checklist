@@ -35,15 +35,23 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import {Card, CardText, CardActions} from 'material-ui/Card';
-import {green700, orange500, red500, white} from 'material-ui/styles/colors'
+import {green700, orange500, red500, white, grey400}
+  from 'material-ui/styles/colors';
 import AppBar from 'material-ui/AppBar';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import DeleteIcon from 'material-ui/svg-icons/action/delete';
 import AddIcon from 'material-ui/svg-icons/content/add';
 import Snackbar from 'material-ui/Snackbar';
+import {List, ListItem} from 'material-ui/List';
+import IconButton from 'material-ui/IconButton';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import CircularProgress from 'material-ui/CircularProgress';
 // Needed for onTouchTap
 injectTapEventPlugin();
 
@@ -51,6 +59,7 @@ const theme = getMuiTheme({
   fontFamily: 'system, -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif',
   palette: {
     primary1Color: green700,
+    canvasColor: white
   },
   appBar: {
     textColor: white,
@@ -76,6 +85,9 @@ var AppContent = React.createClass({
   addQuestion() {
     database.ref('questions/').push({"text": ""});
   },
+  addAction() {
+    database.ref('actions/').push({"text": ""});
+  },
   render: function() {
     return (
       <div class="appContent">
@@ -83,21 +95,24 @@ var AppContent = React.createClass({
           title={"Well – " + new Date()} showMenuIconButton={false}
         />
         <div className="clearfix">
-          <div className="col lg-col-6 md-col-6 px2">
-            <div className="clearfix">
-              <p className="h3 left">How are you today?</p>
-              <div className="right">
-                <FlatButton
-                  label="Add question"
-                  icon={<AddIcon />}
-                  onTouchTap={this.addQuestion}
-                />
-              </div>
-            </div>
+          <div className="col lg-col-6 md-col-6 col-12 px2">
+              <p className="h3">How are you today?</p>
+              <RaisedButton
+                label="Add question"
+                icon={<AddIcon />}
+                onTouchTap={this.addQuestion}
+                className="mb2"
+              />
             <QuestionList />
           </div>
-          <div className="col lg-col-6 md-col-6 px2">
-            <p className="h3">Wellbeing Checklist</p>
+          <div className="col lg-col-6 md-col-6 col-12 px2">
+            <p className="h3">Today I did something to improve my:</p>
+            <RaisedButton
+                label="Add action"
+                icon={<AddIcon />}
+                onTouchTap={this.addAction}
+                className="mb2"
+              />
             <ActionList />
           </div>
         </div>
@@ -115,7 +130,8 @@ var QuestionList = React.createClass({
   mixins: [ReactFireMixin],
   getInitialState() {
       return {
-        questions: []
+        questions: [],
+        displayProgress: ""
       };
   },
   componentWillMount() {
@@ -127,6 +143,7 @@ var QuestionList = React.createClass({
       }.bind(this));
       this.setState ({questions : questions});
     }.bind(this));
+    this.setState({displayProgress: "inline"})
   },
   render: function() {
     var questionNodes = this.state.questions.map(function(question) {
@@ -140,9 +157,13 @@ var QuestionList = React.createClass({
     });
     return (
       <div class="questionList">
+        <CircularProgress style={{"display": this.state.displayProgress}} />
         {questionNodes}
       </div>
     );
+  },
+  componentDidMount() {
+      this.setState({displayProgress: "none"});
   },
   componentWillUpdate() {
     this.scrolled = document.body.scrollTop;
@@ -214,17 +235,19 @@ var ActionList = React.createClass({
       var actionKey = action.key;
       action = action.val();
       return (
-        <div className="pb2" key={actionKey}>
-          <Action id={actionKey}>
-            {action.text}
-          </Action>
-        </div>
+        <Action
+          id={actionKey}
+          key={actionKey}
+          className="pb2"
+        >
+          {action.text}
+        </Action>
       )
     });
     return (
-      <div class="actionList">
+      <List>
         {actionNodes}
-      </div>
+      </List>
     );
   }
 });
@@ -232,34 +255,70 @@ var ActionList = React.createClass({
 var Action = React.createClass({
   getInitialState() {
       return {
-          switched: false
+          check: false,
+          open: false
       };
   },
   componentWillMount() {
     this.databaseReference = database.ref('actions/' + this.props.id + '/answers/' + dateMarker + '/');
-    this.databaseReference.limitToLast(1).on('value', function(snapshot) {
-      var switched = '';
+    this.databaseReference.on('value', function(snapshot) {
+      var check = null;
       snapshot.forEach(function(childSnapshot) {
-        switched = childSnapshot.val();
+        check = childSnapshot.val();
       }.bind(this));
-      this.setState ({switched : switched});
+      this.setState ({check : check});
     }.bind(this));
   },
-  // onCheck() {
-  //   this.setState({switched : !this.state.switched});
-  //   console.log(!this.state.switched);
-  //   this.databaseReference.set({"value" : this.state.switched});
-  // },
+  handleCheck(e) {
+    this.databaseReference.set({"value": e.target.checked});
+  },
+  deleteAction() {
+    database.ref('actions/' + this.props.id).remove();
+    database.ref('actions/' + this.props.id).once('child_removed')
+      .then(function(dataSnapshot) {
+        this.setState({open: true});
+      }.bind(this));
+  },
   render: function() {
-    return (
+    const actionListCheckbox = (
       <Checkbox
-        label={this.props.children}
-        checked
-        // onCheck={this.onCheck}
+        onCheck={this.handleCheck}
+        defaultChecked={this.state.check}
+      />
+    );
+    const iconButtonElement = (
+      <IconButton
+        touch={true}
+        tooltip="more"
+        tooltipPosition="bottom-left"
+      >
+        <MoreVertIcon />
+      </IconButton>
+    );
+
+    const rightIconMenu = (
+      <IconMenu
+        iconButtonElement={iconButtonElement}
+        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+        targetOrigin={{horizontal: 'right', vertical: 'top'}}
+      >
+        <MenuItem primaryText="Edit" />
+        <MenuItem
+          primaryText="Delete"
+          onClick={this.deleteAction}
+        />
+      </IconMenu>
+    );
+    return (
+      <ListItem
+        leftCheckbox={actionListCheckbox}
+        primaryText={this.props.children}
+        rightIconButton={rightIconMenu}
       />
     );
   }
 });
+
 
 const radioStyles = {
   radioButton: {

@@ -52,6 +52,7 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import CircularProgress from 'material-ui/CircularProgress';
+import CheckboxIcon from 'material-ui/svg-icons/toggle/check-box';
 // Needed for onTouchTap
 injectTapEventPlugin();
 
@@ -106,7 +107,7 @@ var AppContent = React.createClass({
             <QuestionList />
           </div>
           <div className="col lg-col-6 md-col-6 col-12 px2">
-            <p className="h3">Today I did something to improve my:</p>
+            <p className="h3">Today I did something to...</p>
             <RaisedButton
                 label="Add action"
                 icon={<AddIcon />}
@@ -203,6 +204,7 @@ var Question = React.createClass({
           <FlatButton
             icon={<DeleteIcon />}
             label="Delete"
+            style={{color: grey400}}
             rippleColor={red500}
             hoverColor={red500}
             onTouchTap={this.deleteQuestion}
@@ -221,7 +223,7 @@ var ActionList = React.createClass({
       };
   },
   componentWillMount() {
-    database.ref('actions').on('value', function(snapshot) {
+    database.ref('actions').orderByChild('last-answer-time').on('value', function(snapshot) {
       var actions = [];
       snapshot.forEach(function(childSnapshot) {
         var action = childSnapshot;
@@ -249,7 +251,13 @@ var ActionList = React.createClass({
         {actionNodes}
       </List>
     );
-  }
+  },
+  componentWillUpdate() {
+    this.scrolled = document.body.scrollTop;
+  },
+  componentDidUpdate() {
+      window.scrollTo(0, this.scrolled);
+  },
 });
 
 var Action = React.createClass({
@@ -271,6 +279,12 @@ var Action = React.createClass({
   },
   handleCheck(e) {
     this.databaseReference.set({"value": e.target.checked});
+    if (e.target.checked) {
+      database.ref('actions/' + this.props.id).update({
+        "last-answer-time": new Date()
+      });
+      console.log("date logged");
+    }
   },
   deleteAction() {
     database.ref('actions/' + this.props.id).remove();
@@ -283,14 +297,16 @@ var Action = React.createClass({
     const actionListCheckbox = (
       <Checkbox
         onCheck={this.handleCheck}
-        defaultChecked={this.state.check}
+        checked={this.state.check}
+        uncheckedIcon={<CheckboxIcon />}
+        iconStyle={this.state.check == false ? {fill: grey400} : {fill: green700}}
       />
     );
     const iconButtonElement = (
       <IconButton
         touch={true}
-        tooltip="more"
-        tooltipPosition="bottom-left"
+        tooltip="More"
+        tooltipPosition="top-left"
       >
         <MoreVertIcon />
       </IconButton>
@@ -301,6 +317,7 @@ var Action = React.createClass({
         iconButtonElement={iconButtonElement}
         anchorOrigin={{horizontal: 'right', vertical: 'top'}}
         targetOrigin={{horizontal: 'right', vertical: 'top'}}
+        iconStyle={{fill: grey400}}
       >
         <MenuItem primaryText="Edit" />
         <MenuItem
@@ -375,21 +392,21 @@ var QuestionButtons = React.createClass({
         >
           <RadioButton
             value="0"
-            label="No"
+            label="Yes"
             style={radioStyles.radioButton}
             labelStyle={this.state.answer == 0 ? radioStyles.radioButtonNo : null}
             iconStyle={this.state.answer == 0 ? radioStyles.radioButtonNo : null}
           />
           <RadioButton
             value="0.5"
-            label="Slightly"
+            label="Mostly"
             style={radioStyles.radioButton}
             labelStyle={this.state.answer == 0.5 ? radioStyles.radioButtonSlightly : null}
             iconStyle={this.state.answer == 0.5 ? radioStyles.radioButtonSlightly : null}
           />
           <RadioButton
             value="1"
-            label="Yes"
+            label="No"
             style={radioStyles.radioButton}
             labelStyle={this.state.answer == 1 ? radioStyles.radioButtonYes : null}
             iconStyle={this.state.answer == 1 ? radioStyles.radioButtonYes : null}
@@ -399,8 +416,6 @@ var QuestionButtons = React.createClass({
     );
   }
 });
-
-
 
 ReactDOM.render(
   <App />,

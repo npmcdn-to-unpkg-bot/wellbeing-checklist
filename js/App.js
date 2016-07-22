@@ -270,7 +270,7 @@ var Action = React.createClass({
   componentWillMount() {
     this.databaseReference = database.ref('actions/' + this.props.id + '/answers/' + dateMarker + '/');
     this.databaseReference.on('value', function(snapshot) {
-      var check = null;
+      var check = false;
       snapshot.forEach(function(childSnapshot) {
         check = childSnapshot.val();
       }.bind(this));
@@ -298,7 +298,7 @@ var Action = React.createClass({
       <Checkbox
         onCheck={this.handleCheck}
         checked={this.state.check}
-        uncheckedIcon={<CheckboxIcon />}
+        // uncheckedIcon={<CheckboxIcon />}
         iconStyle={this.state.check == false ? {fill: grey400} : {fill: green700}}
       />
     );

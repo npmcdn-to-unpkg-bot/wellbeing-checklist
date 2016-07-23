@@ -35,7 +35,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import {Card, CardText, CardActions} from 'material-ui/Card';
-import {green700, orange500, red500, white, grey400}
+import {green700, orange500, red500, white, grey400, grey100}
   from 'material-ui/styles/colors';
 import AppBar from 'material-ui/AppBar';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
@@ -91,7 +91,7 @@ var AppContent = React.createClass({
   },
   render: function() {
     return (
-      <div class="appContent">
+      <div class="appContent" style={{"backgroundColor": grey100}}>
         <AppBar
           title={"Well – " + new Date()} showMenuIconButton={false}
         />

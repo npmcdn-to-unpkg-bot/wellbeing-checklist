@@ -53,6 +53,7 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import CircularProgress from 'material-ui/CircularProgress';
 import CheckboxIcon from 'material-ui/svg-icons/toggle/check-box';
+import {Tabs, Tab} from 'material-ui/Tabs';
 // Needed for onTouchTap
 injectTapEventPlugin();
 
@@ -93,36 +94,39 @@ var AppContent = React.createClass({
     return (
       <div class="appContent" style={{"backgroundColor": grey100}}>
         <AppBar
-          title={"Well – " + new Date()} showMenuIconButton={false}
-        />
-        <div className="clearfix">
-          <div className="col lg-col-6 md-col-6 col-12 px2">
-              <p className="h3">How are you today?</p>
-              <RaisedButton
-                label="Add question"
-                icon={<AddIcon />}
-                onTouchTap={this.addQuestion}
-                className="mb2"
-              />
-            <QuestionList />
-          </div>
-          <div className="col lg-col-6 md-col-6 col-12 px2">
-            <p className="h3">Today I did something to...</p>
-            <RaisedButton
-                label="Add action"
-                icon={<AddIcon />}
-                onTouchTap={this.addAction}
-                className="mb2"
-              />
-            <ActionList />
-          </div>
-        </div>
-        <Snackbar
-          open={this.state.open}
-          message="Question deleted"
-          autoHideDuration={4000}
-        />
+          title={"Well – " + dateMarker}
+          showMenuIconButton={false}
+        / >
+        <Tabs contentContainerClassName="max-width-4 mx-auto">
+          <Tab label="Activity">
+            <div className="max-width-4 mx-auto">
+              <div className="clearfix">
                 <Paper className="p2 lg-m2">
+                  <p className="h3">Today I did something to...</p>
+                  <RaisedButton
+                      label="Add action"
+                      icon={<AddIcon />}
+                      onTouchTap={this.addAction}
+                      className="mb2"
+                    />
+                  <ActionList />
+                </Paper>
+              </div>
+            </div>
+          </Tab>
+          <Tab label="Measurement">
+            <div className="col lg-col-6 md-col-6 col-12 px2">
+                <p className="h3">How have you been feeling?</p>
+                <RaisedButton
+                  label="Add question"
+                  icon={<AddIcon />}
+                  onTouchTap={this.addQuestion}
+                  className="mb2"
+                />
+              <QuestionList />
+            </div>
+          </Tab>
+        </Tabs>
       </div>
     );
   }

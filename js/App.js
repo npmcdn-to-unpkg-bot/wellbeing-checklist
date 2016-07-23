@@ -122,6 +122,7 @@ var AppContent = React.createClass({
           message="Question deleted"
           autoHideDuration={4000}
         />
+                <Paper className="p2 lg-m2">
       </div>
     );
   }

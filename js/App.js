@@ -177,7 +177,11 @@ var QuestionList = React.createClass({
 
 var Question = React.createClass({
   questionTextChange(e) {
-    database.ref('questions/' + this.props.id).set({"text": e.target.value});
+    if (e.keyCode == 13 && !e.shiftKey) {
+      e.preventDefault();
+      database.ref('questions/' + this.props.id).set({"text": e.target.value});
+      document.activeElement.blur();
+    }
   },
   deleteQuestion() {
     database.ref('questions/' + this.props.id).remove();
@@ -195,7 +199,7 @@ var Question = React.createClass({
             fullWidth={true}
             multiLine={true}
             id={this.props.id}
-            onKeyUp={this.questionTextChange}
+            onKeyDown={this.questionTextChange}
           />
         </CardText>
         <CardText>

@@ -54,6 +54,7 @@ import MenuItem from 'material-ui/MenuItem';
 import CircularProgress from 'material-ui/CircularProgress';
 import CheckboxIcon from 'material-ui/svg-icons/toggle/check-box';
 import {Tabs, Tab} from 'material-ui/Tabs';
+import Paper from 'material-ui/Paper';
 // Needed for onTouchTap
 injectTapEventPlugin();
 
@@ -71,7 +72,7 @@ const theme = getMuiTheme({
 var App = React.createClass({
   render: function() {
     return (
-      <MuiThemeProvider muiTheme={theme} >
+      <MuiThemeProvider muiTheme={theme}>
         <AppContent />
       </MuiThemeProvider>
     );
@@ -79,11 +80,6 @@ var App = React.createClass({
 });
 
 var AppContent = React.createClass({
-  getInitialState() {
-      return {
-        open: false
-      };
-  },
   addQuestion() {
     database.ref('questions/').push({"text": ""});
   },
@@ -102,7 +98,7 @@ var AppContent = React.createClass({
             <div className="max-width-4 mx-auto">
               <div className="clearfix">
                 <Paper className="p2 lg-m2">
-                  <p className="h3">Today I did something to...</p>
+                  // <p className="h3">Today I did something to...</p>
                   <RaisedButton
                       label="Add action"
                       icon={<AddIcon />}
@@ -172,17 +168,25 @@ var QuestionList = React.createClass({
       var questionKey = question.key;
       question = question.val();
       return (
-        <div className="pb2" key={questionKey}>
-          <Question id={questionKey} questionText={question.text}></Question>
-        </div>
+        <Question
+          id={questionKey}
+          classname="pb2"
+          key={questionKey}
+        >
+        </Question>
       )
     });
-    return (
-      <div class="questionList">
-        <CircularProgress style={{"display": this.state.displayProgress}} />
-        {questionNodes}
-      </div>
-    );
+    if (this.state.questions.length != 0) {
+      return (
+        <div className="questionsList">
+          {questionNodes}
+        </div>
+      );
+    } else {
+      return (
+        <p>All questions answered</p>
+      );
+    };
   },
   componentDidMount() {
       this.setState({displayProgress: "none"});
@@ -308,7 +312,6 @@ var Action = React.createClass({
       database.ref('actions/' + this.props.id).update({
         "last-answer-time": new Date()
       });
-      console.log("date logged");
     }
   },
   deleteAction() {

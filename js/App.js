@@ -145,7 +145,23 @@ var QuestionList = React.createClass({
       var questions = [];
       snapshot.forEach(function(childSnapshot) {
         var question = childSnapshot;
-        questions.push(question);
+        var daysTillRepeat = "";
+        database.ref('questions/' + question.key + '/days-till-repeat').on('value', function(childSnapshot){
+          daysTillRepeat = childSnapshot.val();
+        });
+        var lastAnswerDay = "";
+        database.ref('questions/' + question.key + '/last-answer-time/').on('value', function(childSnapshot){
+          if (childSnapshot.val() != null) {
+            var lastAnswerTime = new Date(childSnapshot.val());
+            var first = new Date(lastAnswerTime.getFullYear(), 0, 1);
+            var theDay = lastAnswerTime.getDay();
+            var theYear = lastAnswerTime.getFullYear();
+            lastAnswerDay = Math.round(((lastAnswerTime - first) / 1000 / 60 / 60 / 24) + .5, 0);
+          };
+        });
+        if ((theDay - lastAnswerDay) > daysTillRepeat) {
+          questions.push(question);
+        };
       }.bind(this));
       this.setState ({questions : questions});
     }.bind(this));

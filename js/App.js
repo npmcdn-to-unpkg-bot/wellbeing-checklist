@@ -98,7 +98,6 @@ var AppContent = React.createClass({
             <div className="max-width-4 mx-auto">
               <div className="clearfix">
                 <Paper className="p2 lg-m2">
-                  // <p className="h3">Today I did something to...</p>
                   <RaisedButton
                       label="Add action"
                       icon={<AddIcon />}

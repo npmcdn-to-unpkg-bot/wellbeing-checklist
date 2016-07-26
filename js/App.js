@@ -1,8 +1,10 @@
 // Import React
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {ReactFire, ReactFireMixin} from 'reactfire';
+import { ReactFire, ReactFireMixin } from 'reactfire';
 import ReactMixin from 'react-mixin';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 
 // Setup Dates
 var today = new Date();
@@ -35,7 +37,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import {Card, CardText, CardActions} from 'material-ui/Card';
-import {green700, orange500, red500, white, grey400, grey100}
+import {green700, orange500, red500, white, black, grey400, grey100}
   from 'material-ui/styles/colors';
 import AppBar from 'material-ui/AppBar';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
@@ -55,13 +57,28 @@ import CircularProgress from 'material-ui/CircularProgress';
 import CheckboxIcon from 'material-ui/svg-icons/toggle/check-box';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Paper from 'material-ui/Paper';
+import Divider from 'material-ui/Divider';
 // Needed for onTouchTap
 injectTapEventPlugin();
+
+const snackbarReducer = (state = [], action) => {
+  switch (action.type) {
+    case 'OPEN_SNACKBAR':
+      return state.concat([ action.text ])
+    default:
+      return state
+  }
+};
+
+const store = createStore(snackbarReducer, {});
+
+console.log(store.getState());
 
 const theme = getMuiTheme({
   fontFamily: 'system, -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif',
   palette: {
     primary1Color: green700,
+    accent1Color: black,
     canvasColor: white
   },
   appBar: {
@@ -73,13 +90,19 @@ var App = React.createClass({
   render: function() {
     return (
       <MuiThemeProvider muiTheme={theme}>
-        <AppContent />
+        <AppContent ref="appContent" />
       </MuiThemeProvider>
     );
   }
 });
 
 var AppContent = React.createClass({
+  getInitialState() {
+      return {
+          snackbarOpen: false,
+          snackbarMessage: ""
+      };
+  },
   addQuestion() {
     database.ref('questions/').push({"text": ""});
   },
@@ -88,7 +111,7 @@ var AppContent = React.createClass({
   },
   render: function() {
     return (
-      <div class="appContent" style={{"backgroundColor": grey100}}>
+      <div class="appContent">
         <AppBar
           title={"Well – " + dateMarker}
           showMenuIconButton={false}
@@ -96,17 +119,22 @@ var AppContent = React.createClass({
         <Tabs contentContainerClassName="max-width-4 mx-auto">
           <Tab label="Activity">
             <div className="max-width-4 mx-auto">
-              <div className="clearfix">
-                <Paper className="p2 lg-m2">
+              <div className="clearfix mt1">
+                <div className="clearfix">
                   <RaisedButton
-                      label="Add action"
-                      icon={<AddIcon />}
-                      onTouchTap={this.addAction}
-                      className="mb2"
-                    />
-                  <ActionList />
-                </Paper>
+                    label="Add action"
+                    icon={<AddIcon />}
+                    onTouchTap={this.addAction}
+                    className="right mb1"
+                  />
+                </div>
+                <ActionList />
               </div>
+            </div>
+          </Tab>
+          <Tab label="Labels">
+            <div className="clearfix mt1">
+              <LabelList />
             </div>
           </Tab>
           <Tab label="Measurement">
@@ -122,8 +150,40 @@ var AppContent = React.createClass({
             </div>
           </Tab>
         </Tabs>
+        <Snackbar
+          message={this.state.snackbarMessage}
+          open={this.state.snackbarOpen}
+          autoHideDuration={3000}
+        />
       </div>
     );
+  }
+});
+
+var LabelList = React.createClass({
+  mixins: [ReactFireMixin],
+  getInitialState() {
+      return {
+        labels: []
+      };
+  },
+  componentWillMount() {
+    database.ref('labels').on('value', function(snapshot) {
+      var labels = [];
+      snapshot.forEach(function(childSnapshot) {
+        var label = childSnapshot;
+        labels.push(label);
+      }.bind(this));
+      this.setState ({labels : labels});
+    }.bind(this));
+  },
+  render: function() {
+    var labelNodes = this.state.labels.map(function(label){
+      var labelKey = label.key;
+      label = label.val();
+      return (<li key={labelKey}>{label.name}</li>)
+    });
+    return (<ul>{labelNodes}</ul>);
   }
 });
 
@@ -169,8 +229,9 @@ var QuestionList = React.createClass({
       return (
         <Question
           id={questionKey}
-          classname="pb2"
           key={questionKey}
+          questionText={question.text}
+          classname="pb2"
         >
         </Question>
       )
@@ -212,6 +273,11 @@ var Question = React.createClass({
       .then(function(dataSnapshot) {
         this.setState({open: true});
       }.bind(this));
+    store.dispatch({
+      type: 'OPEN_SNACKBAR',
+      snackbarOpen: open,
+      snackbarMessage: "Question deleted"
+    });
   },
   render: function() {
     return (
@@ -255,7 +321,23 @@ var ActionList = React.createClass({
       var actions = [];
       snapshot.forEach(function(childSnapshot) {
         var action = childSnapshot;
-        actions.push(action);
+        var daysTillRepeat = "";
+        database.ref('actions/' + action.key + '/days-till-repeat').on('value', function(childSnapshot){
+          daysTillRepeat = childSnapshot.val();
+        });
+        var lastAnswerDay = "";
+        database.ref('actions/' + action.key + '/last-answer-time/').on('value', function(childSnapshot){
+          if (childSnapshot.val() != null) {
+            var lastAnswerTime = new Date(childSnapshot.val());
+            var first = new Date(lastAnswerTime.getFullYear(), 0, 1);
+            var theDay = lastAnswerTime.getDay();
+            var theYear = lastAnswerTime.getFullYear();
+            lastAnswerDay = Math.round(((lastAnswerTime - first) / 1000 / 60 / 60 / 24) + .5, 0);
+          };
+        });
+        if ((theDay - lastAnswerDay) > daysTillRepeat) {
+          actions.push(action);
+        };
       }.bind(this));
       this.setState ({actions : actions});
     }.bind(this));
@@ -269,16 +351,25 @@ var ActionList = React.createClass({
           id={actionKey}
           key={actionKey}
           className="pb2"
+          daysTillRepeat={action['days-till-repeat']}
         >
           {action.text}
         </Action>
       )
     });
-    return (
-      <List>
-        {actionNodes}
-      </List>
-    );
+    if (this.state.actions.length != 0) {
+      return (
+        <Paper className="mt1 mb4">
+          <List>
+            {actionNodes}
+          </List>
+        </Paper>
+      );
+    } else {
+      return (
+        <p className="center">All actions done</p>
+      );
+    };
   },
   componentWillUpdate() {
     this.scrolled = document.body.scrollTop;
@@ -354,11 +445,15 @@ var Action = React.createClass({
       </IconMenu>
     );
     return (
-      <ListItem
-        leftCheckbox={actionListCheckbox}
-        primaryText={this.props.children}
-        rightIconButton={rightIconMenu}
-      />
+      <div className="listItem">
+        <ListItem
+          leftCheckbox={actionListCheckbox}
+          primaryText={this.props.children}
+          secondaryText={"Label: " + this.props.labelKey}
+          rightIconButton={rightIconMenu}
+        />
+        <Divider inset={true} />
+      </div>
     );
   }
 });
@@ -445,6 +540,8 @@ var QuestionButtons = React.createClass({
 });
 
 ReactDOM.render(
-  <App />,
+  <Provider store={store}>
+    <App />
+  </Provider>,
   document.getElementById('react')
 );

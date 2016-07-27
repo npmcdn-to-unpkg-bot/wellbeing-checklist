@@ -119,13 +119,13 @@ var AppContent = React.createClass({
         <Tabs contentContainerClassName="max-width-4 mx-auto">
           <Tab label="Activity">
             <div className="max-width-4 mx-auto">
-              <div className="clearfix mt1">
+              <div className="clearfix">
                 <div className="clearfix">
                   <RaisedButton
                     label="Add action"
                     icon={<AddIcon />}
                     onTouchTap={this.addAction}
-                    className="right mb1"
+                    className="right my2"
                   />
                 </div>
                 <ActionList />
@@ -137,7 +137,7 @@ var AppContent = React.createClass({
               <LabelList />
             </div>
           </Tab>
-          <Tab label="Measurement">
+          <Tab label="Perception">
             <div className="col lg-col-6 md-col-6 col-12 px2">
                 <p className="h3">How have you been feeling?</p>
                 <RaisedButton
@@ -181,7 +181,7 @@ var LabelList = React.createClass({
     var labelNodes = this.state.labels.map(function(label){
       var labelKey = label.key;
       label = label.val();
-      return (<li key={labelKey}>{label.name}</li>)
+      return (<li key={labelKey}>{label.label}</li>)
     });
     return (<ul>{labelNodes}</ul>);
   }
@@ -321,23 +321,7 @@ var ActionList = React.createClass({
       var actions = [];
       snapshot.forEach(function(childSnapshot) {
         var action = childSnapshot;
-        var daysTillRepeat = "";
-        database.ref('actions/' + action.key + '/days-till-repeat').on('value', function(childSnapshot){
-          daysTillRepeat = childSnapshot.val();
-        });
-        var lastAnswerDay = "";
-        database.ref('actions/' + action.key + '/last-answer-time/').on('value', function(childSnapshot){
-          if (childSnapshot.val() != null) {
-            var lastAnswerTime = new Date(childSnapshot.val());
-            var first = new Date(lastAnswerTime.getFullYear(), 0, 1);
-            var theDay = lastAnswerTime.getDay();
-            var theYear = lastAnswerTime.getFullYear();
-            lastAnswerDay = Math.round(((lastAnswerTime - first) / 1000 / 60 / 60 / 24) + .5, 0);
-          };
-        });
-        if ((theDay - lastAnswerDay) > daysTillRepeat) {
-          actions.push(action);
-        };
+        actions.push(action);
       }.bind(this));
       this.setState ({actions : actions});
     }.bind(this));
@@ -352,6 +336,8 @@ var ActionList = React.createClass({
           key={actionKey}
           className="pb2"
           daysTillRepeat={action['days-till-repeat']}
+          perceptualImpact={action.perceptualImpact}
+          labelKey={action.labelKey}
         >
           {action.text}
         </Action>
@@ -359,7 +345,7 @@ var ActionList = React.createClass({
     });
     if (this.state.actions.length != 0) {
       return (
-        <Paper className="mt1 mb4">
+        <Paper className="mb4">
           <List>
             {actionNodes}
           </List>
@@ -383,7 +369,7 @@ var Action = React.createClass({
   getInitialState() {
       return {
           check: false,
-          open: false
+          labelName: ""
       };
   },
   componentWillMount() {
@@ -394,6 +380,9 @@ var Action = React.createClass({
         check = childSnapshot.val();
       }.bind(this));
       this.setState ({check : check});
+    }.bind(this));
+    database.ref('labels/' + this.props.labelKey + '/label/').on('value', function(snapshot){
+      this.setState({labelName: snapshot.val()});
     }.bind(this));
   },
   handleCheck(e) {
@@ -416,7 +405,6 @@ var Action = React.createClass({
       <Checkbox
         onCheck={this.handleCheck}
         checked={this.state.check}
-        // uncheckedIcon={<CheckboxIcon />}
         iconStyle={this.state.check == false ? {fill: grey400} : {fill: green700}}
       />
     );
@@ -429,7 +417,6 @@ var Action = React.createClass({
         <MoreVertIcon />
       </IconButton>
     );
-
     const rightIconMenu = (
       <IconMenu
         iconButtonElement={iconButtonElement}
@@ -449,7 +436,7 @@ var Action = React.createClass({
         <ListItem
           leftCheckbox={actionListCheckbox}
           primaryText={this.props.children}
-          secondaryText={"Label: " + this.props.labelKey}
+          secondaryText={"Label: " + this.state.labelName + " · Perceptual impact: " + this.props.perceptualImpact}
           rightIconButton={rightIconMenu}
         />
         <Divider inset={true} />

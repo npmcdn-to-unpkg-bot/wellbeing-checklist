@@ -33,16 +33,18 @@ Firebase.initializeApp(config);
 var database = firebase.database();
 
 // Import Material components
+import Dialog from 'material-ui/Dialog';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import {Card, CardText, CardActions} from 'material-ui/Card';
+import {Card, CardTitle, CardText, CardActions} from 'material-ui/Card';
 import {green700, orange500, red500, white, black, grey400, grey100}
   from 'material-ui/styles/colors';
 import AppBar from 'material-ui/AppBar';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import DeleteIcon from 'material-ui/svg-icons/action/delete';
@@ -72,7 +74,6 @@ const snackbarReducer = (state = [], action) => {
 
 const store = createStore(snackbarReducer, {});
 
-console.log(store.getState());
 
 const theme = getMuiTheme({
   fontFamily: 'system, -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif',
@@ -106,9 +107,6 @@ var AppContent = React.createClass({
   addQuestion() {
     database.ref('questions/').push({"text": ""});
   },
-  addAction() {
-    database.ref('actions/').push({"text": ""});
-  },
   render: function() {
     return (
       <div class="appContent">
@@ -120,15 +118,8 @@ var AppContent = React.createClass({
           <Tab label="Activity">
             <div className="max-width-4 mx-auto">
               <div className="clearfix">
-                <div className="clearfix">
-                  <RaisedButton
-                    label="Add action"
-                    icon={<AddIcon />}
-                    onTouchTap={this.addAction}
-                    className="right my2"
-                  />
-                </div>
-                <ActionList />
+                <AddActionDialog />
+                <ActionCategoryGroups />
               </div>
             </div>
           </Tab>
@@ -155,6 +146,328 @@ var AppContent = React.createClass({
           open={this.state.snackbarOpen}
           autoHideDuration={3000}
         />
+      </div>
+    );
+  }
+});
+
+const AddActionDialog = React.createClass({
+  getInitialState() {
+      return {
+        open: false
+      };
+  },
+  toggleDialog() {
+    this.setState({
+      open: !this.state.open
+    })
+  },
+  addAction() {
+    database.ref('actions/').push({"text": ""});
+  },
+  render: function() {
+    return (
+      <div className="addAction">
+        <div className="clearfix">
+          <RaisedButton
+            label="Add action"
+            icon={<AddIcon />}
+            onTouchTap={this.toggleDialog}
+            className="right my2"
+          />
+        </div>
+        <Dialog
+          title="Add action"
+          modal={false}
+          open={this.state.open}
+          onRequestClose={this.toggleDialog}
+        >
+          <AddActionForm />
+        </Dialog>
+      </div>
+    );
+  }
+});
+
+
+const AddActionForm = React.createClass({
+  getInitialState() {
+      return {
+        name: "",
+        perceptualImpact: "",
+        labelKey: ""
+      };
+  },
+  selectLabel(e, i, p) {
+    this.setState({
+      labelKey: p
+    });
+  },
+  updateName(e) {
+    this.setState({
+      name: e.target.value
+    });
+  },
+  updatePerceptualImpact(e) {
+    this.setState({
+      perceptualImpact: e.target.value
+    });
+  },
+  addAction() {
+    database.ref('actions').push({
+      text: this.state.name,
+      perceptualImpact: this.state.perceptualImpact,
+      labelKey: this.state.labelKey
+    });
+
+    this.setState(this.getInitialState());
+  },
+  render: function() {
+    var labels = [];
+    database.ref('labels').on('value', function(snapshot) {
+      snapshot.forEach(function(childSnapshot){
+        labels.push(childSnapshot);
+      });
+    });
+    var labelNodes = labels.map(function(rawLabel) {
+      const labelKey = rawLabel.key;
+      const label = rawLabel.val();
+      return (
+        <MenuItem
+          primaryText={label.label}
+          key={labelKey}
+          value={labelKey}
+        />
+      );
+    });
+    return(
+      <div className="addActionForm">
+        <TextField
+          floatingLabelText={"Action name"}
+          fullWidth={true}
+          value={this.state.name}
+          onChange={this.updateName}
+        />
+        <br />
+        <TextField
+          floatingLabelText={"Perceptual impact"}
+          type={"number"}
+          helpText={"0.25"}
+          min="0"
+          max="1"
+          step="0.05"
+          value={this.state.perceptualImpact}
+          onChange={this.updatePerceptualImpact}
+        />
+        <br />
+        <SelectField
+          value={this.state.labelKey}
+          onChange={this.selectLabel}
+          autoWidth={true}
+          fullWidth={true}
+          floatingLabelText="Select label"
+        >
+          {labelNodes}
+        </SelectField>
+        <br />
+        <RaisedButton
+          label={"Add"}
+          primary={true}
+          onTouchTap={this.addAction}
+        />
+      </div>
+    );
+  }
+});
+
+var ActionCategoryGroups = React.createClass({
+  mixins: [ReactFireMixin],
+  getInitialState() {
+      return {
+        actionCategoryGroups: []
+      };
+  },
+  componentWillMount() {
+    database.ref('actions').on('value', function(snapshot) {
+      var actionCategoryGroups = [];
+      snapshot.forEach(function(childSnapshot) {
+        var actionCategoryGroup = childSnapshot.val();
+        actionCategoryGroups.push(actionCategoryGroup);
+      }.bind(this));
+      this.setState ({actionCategoryGroups : actionCategoryGroups});
+    }.bind(this));
+  },
+  render: function() {
+    var actionCategoryGroupNodes = this.state.actionCategoryGroups.map(function(actionCategoryGroup) {
+      return (
+        <ActionCategoryGroup
+          id={actionCategoryGroup.labelKey}
+          key={actionCategoryGroup.labelKey}
+          labelKey={actionCategoryGroup.labelKey}
+        />
+      )
+    });
+    if (this.state.actionCategoryGroups.length != 0) {
+      return (
+        <div>{actionCategoryGroupNodes}</div>
+      );
+    } else {
+      return (
+        <p className="center">All actionCategoryGroups done</p>
+      );
+    };
+  },
+  componentWillUpdate() {
+    this.scrolled = document.body.scrollTop;
+  },
+  componentDidUpdate() {
+      window.scrollTo(0, this.scrolled);
+  },
+});
+
+const ActionCategoryGroup = React.createClass({
+  getInitialState() {
+    return {
+      perception: null
+    };
+  },
+  componentWillMount() {
+    var perception;
+    database.ref('labels/' + this.props.labelKey + '/perception').on('value', function(snapshot){
+      var perception = snapshot.val();
+    }.bind(this));
+    this.setState({perception: perception});
+  },
+  render: function() {
+    return (
+      <Card className="mb2">
+        <CardTitle
+          title={this.props.labelKey}
+        />
+        <ActionList
+          id={this.props.id}
+          labelKey={this.props.id}
+          perception={this.state.perception}
+        />
+      </Card>
+    );
+  }
+});
+
+const ActionList = React.createClass({
+  getInitialState() {
+      return {
+          actions: []
+      };
+  },
+  componentWillMount() {
+    var ref = database.ref('actions').orderByChild('labelKey').equalTo(this.props.id);
+    ref.on('value', function(snapshot) {
+      var actions = [];
+      snapshot.forEach(function(childSnapshot) {
+        var action = childSnapshot;
+        actions.push(action);
+      }.bind(this));
+      this.setState({actions: actions});
+    }.bind(this));
+  },
+  render: function() {
+    var actionNodes = this.state.actions.map(function(action) {
+      var actionKey = action.key;
+      var action = action.val();
+      return (
+        <Action
+          key={actionKey}
+          id={actionKey}
+          labelKey={action.labelKey}
+          perceptualImpact={action.perceptualImpact}
+        >
+          {action.text}
+        </Action>
+      );
+    });
+    return (
+      <div>{actionNodes}</div>
+    )
+  }
+});
+
+var Action = React.createClass({
+  getInitialState() {
+      return {
+          check: false
+      };
+  },
+  componentWillMount() {
+    this.databaseReference = database.ref('actions/' + this.props.id + '/answers/' + dateMarker + '/');
+    this.databaseReference.on('value', function(snapshot) {
+      var check = false;
+      snapshot.forEach(function(childSnapshot) {
+        check = childSnapshot.val();
+      }.bind(this));
+      this.setState ({check : check});
+    }.bind(this));
+  },
+  handleCheck(e) {
+    this.databaseReference.set({
+      "value": e.target.checked
+    });
+    if (e.target.checked) {
+      database.ref('actions/' + this.props.id).update({
+        "last-answer-time": new Date()
+      });
+    };
+    database.ref('labels/' + this.props.labelKey).update({
+      "perception": this.props.perception + this.props.perceptualImpact
+    });
+  },
+  deleteAction() {
+    database.ref('actions/' + this.props.id).remove();
+    database.ref('actions/' + this.props.id).once('child_removed')
+      .then(function(dataSnapshot) {
+        this.setState({open: true});
+      }.bind(this));
+  },
+  render: function() {
+    const actionListCheckbox = (
+      <Checkbox
+        onCheck={this.handleCheck}
+        checked={this.state.check}
+        iconStyle={this.state.check == false ? {fill: grey400} : {fill: green700}}
+      />
+    );
+    const iconButtonElement = (
+      <IconButton
+        touch={true}
+        tooltip="More"
+        tooltipPosition="top-left"
+      >
+        <MoreVertIcon />
+      </IconButton>
+    );
+    const rightIconMenu = (
+      <IconMenu
+        iconButtonElement={iconButtonElement}
+        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+        targetOrigin={{horizontal: 'right', vertical: 'top'}}
+        iconStyle={{fill: grey400}}
+      >
+        <MenuItem primaryText="Edit" />
+        <MenuItem
+          primaryText="Delete"
+          onClick={this.deleteAction}
+        />
+      </IconMenu>
+    );
+    return (
+      <div className="listItem">
+        <ListItem
+          leftCheckbox={actionListCheckbox}
+          primaryText={this.props.children}
+          secondaryText={"Perceptual impact: " + this.props.perceptualImpact}
+          rightIconButton={rightIconMenu}
+        />
+        <Divider inset={true} />
       </div>
     );
   }
@@ -305,142 +618,6 @@ var Question = React.createClass({
           />
         </CardActions>
       </Card>
-    );
-  }
-});
-
-var ActionList = React.createClass({
-  mixins: [ReactFireMixin],
-  getInitialState() {
-      return {
-        actions: []
-      };
-  },
-  componentWillMount() {
-    database.ref('actions').orderByChild('last-answer-time').on('value', function(snapshot) {
-      var actions = [];
-      snapshot.forEach(function(childSnapshot) {
-        var action = childSnapshot;
-        actions.push(action);
-      }.bind(this));
-      this.setState ({actions : actions});
-    }.bind(this));
-  },
-  render: function() {
-    var actionNodes = this.state.actions.map(function(action) {
-      var actionKey = action.key;
-      action = action.val();
-      return (
-        <Action
-          id={actionKey}
-          key={actionKey}
-          className="pb2"
-          daysTillRepeat={action['days-till-repeat']}
-          perceptualImpact={action.perceptualImpact}
-          labelKey={action.labelKey}
-        >
-          {action.text}
-        </Action>
-      )
-    });
-    if (this.state.actions.length != 0) {
-      return (
-        <Paper className="mb4">
-          <List>
-            {actionNodes}
-          </List>
-        </Paper>
-      );
-    } else {
-      return (
-        <p className="center">All actions done</p>
-      );
-    };
-  },
-  componentWillUpdate() {
-    this.scrolled = document.body.scrollTop;
-  },
-  componentDidUpdate() {
-      window.scrollTo(0, this.scrolled);
-  },
-});
-
-var Action = React.createClass({
-  getInitialState() {
-      return {
-          check: false,
-          labelName: ""
-      };
-  },
-  componentWillMount() {
-    this.databaseReference = database.ref('actions/' + this.props.id + '/answers/' + dateMarker + '/');
-    this.databaseReference.on('value', function(snapshot) {
-      var check = false;
-      snapshot.forEach(function(childSnapshot) {
-        check = childSnapshot.val();
-      }.bind(this));
-      this.setState ({check : check});
-    }.bind(this));
-    database.ref('labels/' + this.props.labelKey + '/label/').on('value', function(snapshot){
-      this.setState({labelName: snapshot.val()});
-    }.bind(this));
-  },
-  handleCheck(e) {
-    this.databaseReference.set({"value": e.target.checked});
-    if (e.target.checked) {
-      database.ref('actions/' + this.props.id).update({
-        "last-answer-time": new Date()
-      });
-    }
-  },
-  deleteAction() {
-    database.ref('actions/' + this.props.id).remove();
-    database.ref('actions/' + this.props.id).once('child_removed')
-      .then(function(dataSnapshot) {
-        this.setState({open: true});
-      }.bind(this));
-  },
-  render: function() {
-    const actionListCheckbox = (
-      <Checkbox
-        onCheck={this.handleCheck}
-        checked={this.state.check}
-        iconStyle={this.state.check == false ? {fill: grey400} : {fill: green700}}
-      />
-    );
-    const iconButtonElement = (
-      <IconButton
-        touch={true}
-        tooltip="More"
-        tooltipPosition="top-left"
-      >
-        <MoreVertIcon />
-      </IconButton>
-    );
-    const rightIconMenu = (
-      <IconMenu
-        iconButtonElement={iconButtonElement}
-        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-        targetOrigin={{horizontal: 'right', vertical: 'top'}}
-        iconStyle={{fill: grey400}}
-      >
-        <MenuItem primaryText="Edit" />
-        <MenuItem
-          primaryText="Delete"
-          onClick={this.deleteAction}
-        />
-      </IconMenu>
-    );
-    return (
-      <div className="listItem">
-        <ListItem
-          leftCheckbox={actionListCheckbox}
-          primaryText={this.props.children}
-          secondaryText={"Label: " + this.state.labelName + " · Perceptual impact: " + this.props.perceptualImpact}
-          rightIconButton={rightIconMenu}
-        />
-        <Divider inset={true} />
-      </div>
     );
   }
 });

@@ -119,7 +119,7 @@ var AppContent = React.createClass({
             <div className="max-width-4 mx-auto">
               <div className="clearfix">
                 <AddActionDialog />
-                <ActionCategoryGroups />
+                <Labels />
               </div>
             </div>
           </Tab>
@@ -197,9 +197,9 @@ const AddActionForm = React.createClass({
         labelKey: ""
       };
   },
-  selectLabel(e, i, p) {
+  selectLabel(e, i, payload) {
     this.setState({
-      labelKey: p
+      labelKey: payload
     });
   },
   updateName(e) {
@@ -223,7 +223,7 @@ const AddActionForm = React.createClass({
   },
   render: function() {
     var labels = [];
-    database.ref('labels').on('value', function(snapshot) {
+    database.ref('labels').orderByChild('perception').on('value', function(snapshot) {
       snapshot.forEach(function(childSnapshot){
         labels.push(childSnapshot);
       });
@@ -279,40 +279,43 @@ const AddActionForm = React.createClass({
   }
 });
 
-var ActionCategoryGroups = React.createClass({
+var Labels = React.createClass({
   mixins: [ReactFireMixin],
   getInitialState() {
       return {
-        actionCategoryGroups: []
+        labels: []
       };
   },
   componentWillMount() {
-    database.ref('actions').on('value', function(snapshot) {
-      var actionCategoryGroups = [];
+    database.ref('labels').orderByChild('perception').on('value', function(snapshot) {
+      var labels = [];
       snapshot.forEach(function(childSnapshot) {
-        var actionCategoryGroup = childSnapshot.val();
-        actionCategoryGroups.push(actionCategoryGroup);
+        var label = childSnapshot;
+        labels.push(label);
       }.bind(this));
-      this.setState ({actionCategoryGroups : actionCategoryGroups});
+      this.setState ({labels : labels});
     }.bind(this));
   },
   render: function() {
-    var actionCategoryGroupNodes = this.state.actionCategoryGroups.map(function(actionCategoryGroup) {
+    var labelNodes = this.state.labels.map(function(label) {
+      var labelKey = label.key;
+      var label = label.val();
       return (
-        <ActionCategoryGroup
-          id={actionCategoryGroup.labelKey}
-          key={actionCategoryGroup.labelKey}
-          labelKey={actionCategoryGroup.labelKey}
+        <Label
+          id={labelKey}
+          key={labelKey}
+          name={label.label}
+          perception={label.perception}
         />
       )
     });
-    if (this.state.actionCategoryGroups.length != 0) {
+    if (this.state.labels.length != 0) {
       return (
-        <div>{actionCategoryGroupNodes}</div>
+        <div>{labelNodes}</div>
       );
     } else {
       return (
-        <p className="center">All actionCategoryGroups done</p>
+        <p className="center">All labels done</p>
       );
     };
   },
@@ -324,26 +327,11 @@ var ActionCategoryGroups = React.createClass({
   },
 });
 
-const ActionCategoryGroup = React.createClass({
-  getInitialState() {
-      return {
-          labelName: "",
-          perception: null
-      };
-  },
-  componentWillMount() {
-    database.ref('labels/' + this.props.labelKey).on('value', function(snapshot){
-      var label = snapshot.val();
-      this.setState({
-        labelName: label.label,
-        perception: label.perception
-      });
-    }.bind(this));
-  },
+const Label = React.createClass({
   changePerceptionColor() {
-    if (this.state.perception <= 0.25) {
+    if (this.props.perception <= 0.25) {
       return { color: red500 }
-    } else if (this.state.perception > 0.25 && this.state.perception <= 0.75) {
+    } else if (this.props.perception > 0.25 && this.props.perception <= 0.75) {
       return { color: orange500 }
     } else {
       return { color: green700 }
@@ -353,18 +341,17 @@ const ActionCategoryGroup = React.createClass({
     return (
       <div className="actionCategoryGroup">
         <div className="mb1">
-          {this.state.labelName + " – "}
+          {this.props.name + " – "}
           <span
             style={this.changePerceptionColor()}
           >
-            {this.state.perception}
+            {this.props.perception}
           </span>
         </div>
         <Card className="mb3">
           <ActionList
             id={this.props.id}
-            labelKey={this.props.id}
-            perception={this.state.perception}
+            perception={this.props.perception}
           />
         </Card>
       </div>
@@ -397,7 +384,7 @@ const ActionList = React.createClass({
         <Action
           key={actionKey}
           id={actionKey}
-          labelKey={action.labelKey}
+          labelKey={this.props.id}
           perceptualImpact={action.perceptualImpact}
           perception={this.props.perception}
         >

@@ -123,20 +123,19 @@ var AppContent = React.createClass({
               </div>
             </div>
           </Tab>
-          <Tab label="Labels">
-            <div className="clearfix mt1">
-              <LabelList />
-            </div>
-          </Tab>
           <Tab label="Perception">
             <div className="col lg-col-6 md-col-6 col-12 px2">
-                <p className="h3">How have you been feeling?</p>
-                <RaisedButton
-                  label="Add question"
-                  icon={<AddIcon />}
-                  onTouchTap={this.addQuestion}
-                  className="mb2"
-                />
+                <div className="clearfix">
+                  <div className="flex items-baseline">
+                    <p className="h3 left">How have you been feeling?</p>
+                    <RaisedButton
+                      label="Add question"
+                      icon={<AddIcon />}
+                      onTouchTap={this.addQuestion}
+                      className="mb2 right"
+                    />
+                  </div>
+                </div>
               <QuestionList />
             </div>
           </Tab>
@@ -327,29 +326,48 @@ var ActionCategoryGroups = React.createClass({
 
 const ActionCategoryGroup = React.createClass({
   getInitialState() {
-    return {
-      perception: null
-    };
+      return {
+          labelName: "",
+          perception: null
+      };
   },
   componentWillMount() {
-    var perception;
-    database.ref('labels/' + this.props.labelKey + '/perception').on('value', function(snapshot){
-      var perception = snapshot.val();
+    database.ref('labels/' + this.props.labelKey).on('value', function(snapshot){
+      var label = snapshot.val();
+      this.setState({
+        labelName: label.label,
+        perception: label.perception
+      });
     }.bind(this));
-    this.setState({perception: perception});
+  },
+  changePerceptionColor() {
+    if (this.state.perception <= 0.25) {
+      return { color: red500 }
+    } else if (this.state.perception > 0.25 && this.state.perception <= 0.75) {
+      return { color: orange500 }
+    } else {
+      return { color: green700 }
+    }
   },
   render: function() {
     return (
-      <Card className="mb2">
-        <CardTitle
-          title={this.props.labelKey}
-        />
-        <ActionList
-          id={this.props.id}
-          labelKey={this.props.id}
-          perception={this.state.perception}
-        />
-      </Card>
+      <div className="actionCategoryGroup">
+        <div className="mb1">
+          {this.state.labelName + " – "}
+          <span
+            style={this.changePerceptionColor()}
+          >
+            {this.state.perception}
+          </span>
+        </div>
+        <Card className="mb3">
+          <ActionList
+            id={this.props.id}
+            labelKey={this.props.id}
+            perception={this.state.perception}
+          />
+        </Card>
+      </div>
     );
   }
 });
@@ -381,11 +399,12 @@ const ActionList = React.createClass({
           id={actionKey}
           labelKey={action.labelKey}
           perceptualImpact={action.perceptualImpact}
+          perception={this.props.perception}
         >
           {action.text}
         </Action>
       );
-    });
+    }.bind(this));
     return (
       <div>{actionNodes}</div>
     )
@@ -416,10 +435,31 @@ var Action = React.createClass({
       database.ref('actions/' + this.props.id).update({
         "last-answer-time": new Date()
       });
+
+      var perceptionCalculationResult = this.props.perception + this.props.perceptualImpact;
+      var perception;
+      if (perceptionCalculationResult >= 1) {
+        perception = 1;
+      } else {
+        perception = perceptionCalculationResult;
+      };
+
+      database.ref('labels/' + this.props.labelKey).update({
+        "perception": perception
+      });
+    } else {
+      var perceptionCalculationResult = this.props.perception - this.props.perceptualImpact;
+      var perception;
+      if (perceptionCalculationResult <= 0) {
+        perception = 0;
+      } else {
+        perception = perceptionCalculationResult;
+      };
+
+      database.ref('labels/' + this.props.labelKey).update({
+        "perception": perception
+      });
     };
-    database.ref('labels/' + this.props.labelKey).update({
-      "perception": this.props.perception + this.props.perceptualImpact
-    });
   },
   deleteAction() {
     database.ref('actions/' + this.props.id).remove();
@@ -464,39 +504,12 @@ var Action = React.createClass({
         <ListItem
           leftCheckbox={actionListCheckbox}
           primaryText={this.props.children}
-          secondaryText={"Perceptual impact: " + this.props.perceptualImpact}
+          secondaryText={"Impact on perception " + this.props.perceptualImpact}
           rightIconButton={rightIconMenu}
         />
         <Divider inset={true} />
       </div>
     );
-  }
-});
-
-var LabelList = React.createClass({
-  mixins: [ReactFireMixin],
-  getInitialState() {
-      return {
-        labels: []
-      };
-  },
-  componentWillMount() {
-    database.ref('labels').on('value', function(snapshot) {
-      var labels = [];
-      snapshot.forEach(function(childSnapshot) {
-        var label = childSnapshot;
-        labels.push(label);
-      }.bind(this));
-      this.setState ({labels : labels});
-    }.bind(this));
-  },
-  render: function() {
-    var labelNodes = this.state.labels.map(function(label){
-      var labelKey = label.key;
-      label = label.val();
-      return (<li key={labelKey}>{label.label}</li>)
-    });
-    return (<ul>{labelNodes}</ul>);
   }
 });
 
@@ -544,7 +557,7 @@ var QuestionList = React.createClass({
           id={questionKey}
           key={questionKey}
           questionText={question.text}
-          classname="pb2"
+          labelKey={question.labelKey}
         >
         </Question>
       )
@@ -594,7 +607,9 @@ var Question = React.createClass({
   },
   render: function() {
     return (
-      <Card>
+      <Card
+        className="mb2"
+      >
         <CardText>
           <TextField
             defaultValue={this.props.questionText}
@@ -605,7 +620,10 @@ var Question = React.createClass({
           />
         </CardText>
         <CardText>
-          <QuestionButtons id={this.props.id} />
+          <QuestionButtons
+            id={this.props.id}
+            labelKey={this.props.labelKey}
+          />
         </CardText>
         <CardActions>
           <FlatButton
@@ -667,6 +685,9 @@ var QuestionButtons = React.createClass({
     database.ref('questions/' + this.props.id).update({
       "last-answer-time": new Date()
     });
+    database.ref('labels/' + this.props.labelKey).update({
+      "perception": e.target.value
+    });
   },
   render: function() {
     return (
@@ -677,7 +698,7 @@ var QuestionButtons = React.createClass({
           onChange={this.onChange}
         >
           <RadioButton
-            value="0"
+            value="1"
             label="Yes"
             style={radioStyles.radioButton}
             labelStyle={this.state.answer == 0 ? radioStyles.radioButtonNo : null}
@@ -685,13 +706,13 @@ var QuestionButtons = React.createClass({
           />
           <RadioButton
             value="0.5"
-            label="Mostly"
+            label="Middle"
             style={radioStyles.radioButton}
             labelStyle={this.state.answer == 0.5 ? radioStyles.radioButtonSlightly : null}
             iconStyle={this.state.answer == 0.5 ? radioStyles.radioButtonSlightly : null}
           />
           <RadioButton
-            value="1"
+            value="0"
             label="No"
             style={radioStyles.radioButton}
             labelStyle={this.state.answer == 1 ? radioStyles.radioButtonYes : null}

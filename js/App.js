@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { ReactFire, ReactFireMixin } from 'reactfire';
 import ReactMixin from 'react-mixin';
 import { createStore } from 'redux';
-import { Provider } from 'react-redux';
+import { Provider, connect } from 'react-redux';
 
 // Setup Dates
 var today = new Date();
@@ -63,18 +63,6 @@ import Divider from 'material-ui/Divider';
 // Needed for onTouchTap
 injectTapEventPlugin();
 
-const snackbarReducer = (state = [], action) => {
-  switch (action.type) {
-    case 'OPEN_SNACKBAR':
-      return state.concat([ action.text ])
-    default:
-      return state
-  }
-};
-
-const store = createStore(snackbarReducer, {});
-
-
 const theme = getMuiTheme({
   fontFamily: 'system, -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif',
   palette: {
@@ -111,14 +99,13 @@ var AppContent = React.createClass({
     return (
       <div class="appContent">
         <AppBar
-          title={"Well – " + dateMarker}
+          title="Well"
           showMenuIconButton={false}
         / >
         <Tabs contentContainerClassName="max-width-4 mx-auto">
           <Tab label="Activity">
             <div className="max-width-4 mx-auto">
               <div className="clearfix">
-                <AddActionDialog />
                 <Labels />
               </div>
             </div>
@@ -145,6 +132,7 @@ var AppContent = React.createClass({
           open={this.state.snackbarOpen}
           autoHideDuration={3000}
         />
+        <AddActionDialog />
       </div>
     );
   }
@@ -156,34 +144,32 @@ const AddActionDialog = React.createClass({
         open: false
       };
   },
-  toggleDialog() {
-    this.setState({
-      open: !this.state.open
-    })
-  },
   addAction() {
     database.ref('actions/').push({"text": ""});
   },
+  requestDialogClose() {
+    store.dispatch(closeActionEditDialog());
+  },
   render: function() {
+    store.subscribe(() =>
+      store.getState()[0].actionEditDialogOpen == true ? this.setState({open: true}) : null
+    );
+    store.subscribe(() =>
+      console.log(store.getState()[0])
+    );
+    store.subscribe(() =>
+      store.getState()[0].actionEditDialogOpen == false ? this.setState({open: false}) : null
+    );
     return (
-      <div className="addAction">
-        <div className="clearfix">
-          <RaisedButton
-            label="Add action"
-            icon={<AddIcon />}
-            onTouchTap={this.toggleDialog}
-            className="right my2"
-          />
-        </div>
-        <Dialog
-          title="Add action"
-          modal={false}
-          open={this.state.open}
-          onRequestClose={this.toggleDialog}
-        >
-          <AddActionForm />
-        </Dialog>
-      </div>
+      <Dialog
+        title="Add action"
+        modal={false}
+        open={this.state.open}
+        onRequestClose={this.requestDialogClose}
+        labelKey={this.props.id}
+      >
+        <AddActionForm />
+      </Dialog>
     );
   }
 });
@@ -194,8 +180,15 @@ const AddActionForm = React.createClass({
       return {
         name: "",
         perceptualImpact: "",
+        effort: "",
+        repeatPeriod: "",
         labelKey: ""
       };
+  },
+  componentWillMount() {
+    this.setState({
+      labelKey: this.props.labelKey
+    })
   },
   selectLabel(e, i, payload) {
     this.setState({
@@ -212,10 +205,22 @@ const AddActionForm = React.createClass({
       perceptualImpact: e.target.value
     });
   },
+  updateEffort(e) {
+    this.setState({
+      effort: e.target.value
+    });
+  },
+  updateRepeatPeriod(e) {
+    this.setState({
+      repeatPeriod: e.target.value
+    });
+  },
   addAction() {
     database.ref('actions').push({
       text: this.state.name,
-      perceptualImpact: this.state.perceptualImpact,
+      perceptualImpact: Number(this.state.perceptualImpact),
+      effort: Number(this.state.effort),
+      repeatPeriod: Number(this.state.repeatPeriod),
       labelKey: this.state.labelKey
     });
 
@@ -250,13 +255,32 @@ const AddActionForm = React.createClass({
         <br />
         <TextField
           floatingLabelText={"Perceptual impact"}
-          type={"number"}
-          helpText={"0.25"}
+          type={"tel"}
           min="0"
           max="1"
           step="0.05"
           value={this.state.perceptualImpact}
           onChange={this.updatePerceptualImpact}
+        />
+        <br />
+        <TextField
+          floatingLabelText={"Effort"}
+          type={"tel"}
+          min="0"
+          max="1"
+          step="0.05"
+          value={this.state.effort}
+          onChange={this.updateEffort}
+        />
+        <br />
+        <TextField
+          floatingLabelText={"Repeats every x days"}
+          type={"tel"}
+          min="0"
+          max="1"
+          step="1"
+          value={this.state.repeatPeriod}
+          onChange={this.updateRepeatPeriod}
         />
         <br />
         <SelectField
@@ -283,18 +307,48 @@ var Labels = React.createClass({
   mixins: [ReactFireMixin],
   getInitialState() {
       return {
-        labels: []
+        labels: [],
+        overallPerception: null,
+        loading: true
       };
   },
   componentWillMount() {
     database.ref('labels').orderByChild('perception').on('value', function(snapshot) {
       var labels = [];
+      var perceptions = [];
       snapshot.forEach(function(childSnapshot) {
         var label = childSnapshot;
         labels.push(label);
+
+        var labelVal = label.val();
+        perceptions.push(labelVal.perception);
       }.bind(this));
-      this.setState ({labels : labels});
+
+      var sumPerception = perceptions.reduce((a, b) => a + b, 0);
+      var overallPerception = Math.round((sumPerception / labels.length) * 100);
+
+      this.setState ({
+        labels: labels,
+        overallPerception: overallPerception
+      });
     }.bind(this));
+  },
+  componentDidMount() {
+    this.setState({
+      loading: false
+    })
+  },
+  changePerceptionColor() {
+    if (this.state.overallPerception <= 25) {
+      return { color: red500 }
+    } else if (this.state.overallPerception > 25 && this.state.overallPerception <= 75) {
+      return { color: orange500 }
+    } else {
+      return { color: green700 }
+    }
+  },
+  jumpToPerceptionControl(e) {
+    e.preventDefault();
   },
   render: function() {
     var labelNodes = this.state.labels.map(function(label) {
@@ -309,14 +363,29 @@ var Labels = React.createClass({
         />
       )
     });
-    if (this.state.labels.length != 0) {
-      return (
-        <div>{labelNodes}</div>
-      );
+    if (this.state.loading) {
+      return (<CircularProgress />)
     } else {
-      return (
-        <p className="center">All labels done</p>
-      );
+      if (this.state.labels.length != 0) {
+        return (
+          <div>
+            <div className="clearfix">
+              <h4 className="center">
+                Overall perception of wellness
+              </h4>
+              <h1 className="center" style={this.changePerceptionColor()}>{this.state.overallPerception}%</h1>
+            </div>
+            <div className="clearfix mb3">
+              <Divider />
+            </div>
+            {labelNodes}
+          </div>
+        );
+      } else {
+        return (
+          <p className="center">No wellness categories</p>
+        );
+      };
     };
   },
   componentWillUpdate() {
@@ -337,27 +406,143 @@ const Label = React.createClass({
       return { color: green700 }
     }
   },
+  incrementUp(e) {
+    e.preventDefault();
+    var perception = this.props.perception + 0.1;
+    database.ref('labels/' + this.props.id).update({
+      "perception": perception
+    });
+  },
+  incrementDown(e) {
+    e.preventDefault();
+    var perception = this.props.perception - 0.1;
+    database.ref('labels/' + this.props.id).update({
+      "perception": perception
+    });
+  },
   render: function() {
     return (
       <div className="actionCategoryGroup">
-        <div className="mb1">
-          {this.props.name + " – "}
-          <span
-            style={this.changePerceptionColor()}
-          >
-            {this.props.perception}
-          </span>
+        <div className="clearfix mb1">
+          <div className="ml1 md-ml0 left">
+            {this.props.name}
+            <span className="ml2">
+              <span
+                style={this.changePerceptionColor()}
+              >
+                <strong>
+                  {this.props.perception.toFixed(2) * 100}%
+                </strong>
+              </span>
+              <a href="#" className="ml1" style={{"textDecoration": "none", "color": green700}} onTouchTap={this.incrementUp}>⬆ </a>
+              <a href="#" style={{"textDecoration": "none", "color": red500}} onTouchTap={this.incrementDown}> ⬇</a>
+            </span>
+          </div>
+          <LabelActions
+            perception={this.props.perception}
+            id={this.props.id}
+          />
         </div>
-        <Card className="mb3">
+        <div className="mb3">
           <ActionList
             id={this.props.id}
             perception={this.props.perception}
           />
-        </Card>
+        </div>
+        <div className="mb2">
+          <Divider />
+        </div>
       </div>
     );
   }
 });
+
+const initialState = {
+  actionEditDialogOpen: false
+}
+
+const OPEN_ACTION_EDIT_DIALOG = 'OPEN_ACTION_EDIT_DIALOG';
+const CLOSE_ACTION_EDIT_DIALOG = 'CLOSE_ACTION_EDIT_DIALOG';
+
+function openActionEditDialog() {
+  return {
+    type: OPEN_ACTION_EDIT_DIALOG,
+    actionEditDialogOpen: true
+  }
+}
+
+function closeActionEditDialog() {
+  console.log("closeActionEditDialog action creator fired");
+  return {
+    type: CLOSE_ACTION_EDIT_DIALOG,
+    actionEditDialogOpen: false
+  }
+}
+
+function wellApp(state = initialState, action) {
+  switch (action.type) {
+    case OPEN_ACTION_EDIT_DIALOG:
+      return [
+        ...state,
+          {
+            actionEditDialogOpen: true
+          }
+        ]
+    case CLOSE_ACTION_EDIT_DIALOG:
+      console.log("CLOSE_ACTION_EDIT_DIALOG switched");
+      return [
+        ...state,
+          {
+            actionEditDialogOpen: false
+          }
+        ]
+    default:
+      return state
+  }
+}
+
+const store = createStore(wellApp);
+
+const LabelActions = React.createClass({
+  toggleCompleted(e) {
+    e.preventDefault();
+  },
+  render: function() {
+    return (
+      <div className="labelActions mr1 md-mr0 left right">
+        <div className="inline-block mr1">
+          <a href="#"
+            id={this.props.id}
+            onClick={this.toggleCompleted}
+          >
+            Toggle completed
+          </a>
+        </div>
+        <div className="inline-block">
+          <AddActionLink id={this.props.id} />
+        </div>
+      </div>
+    )
+  }
+});
+
+const AddActionLink = React.createClass({
+  triggerAddActionDialog(e) {
+    e.preventDefault();
+    store.dispatch(openActionEditDialog());
+  },
+  render: function() {
+    return(
+      <a href="#"
+        id={this.props.id}
+        onClick={this.triggerAddActionDialog}
+      >
+        Add action
+      </a>
+    )
+  }
+})
+
 
 const ActionList = React.createClass({
   getInitialState() {
@@ -371,7 +556,28 @@ const ActionList = React.createClass({
       var actions = [];
       snapshot.forEach(function(childSnapshot) {
         var action = childSnapshot;
-        actions.push(action);
+        var showAction = () => {
+          if ("last-answer-time" in action.val()) {
+            if (action.val().repeatPeriod != undefined) {
+              var lastAnswerDay = Math.round(((action.val()["last-answer-time"] - first) / 1000 / 60 / 60 / 24) + .5, 0);
+              if (theDay - lastAnswerDay > action.val().repeatPeriod) {
+                return true;
+              }
+              else {
+                return false
+              }
+            }
+            else {
+              return false
+            }
+          }
+          else {
+            return true
+          }
+        };
+        if (showAction()) {
+          actions.push(action);
+        }
       }.bind(this));
       this.setState({actions: actions});
     }.bind(this));
@@ -386,22 +592,35 @@ const ActionList = React.createClass({
           id={actionKey}
           labelKey={this.props.id}
           perceptualImpact={action.perceptualImpact}
+          effort={action.effort}
+          repeatPeriod={action.repeatPeriod}
           perception={this.props.perception}
         >
           {action.text}
         </Action>
       );
     }.bind(this));
-    return (
-      <div>{actionNodes}</div>
-    )
+    if (this.state.actions != 0) {
+      return (
+        <Card>
+          <div>{actionNodes}</div>
+        </Card>
+      )
+    } else {
+      return (
+        <div className="center">
+          No actions{ " — "}
+          <AddActionLink id={this.props.id} />
+        </div>
+      )
+    }
   }
 });
 
 var Action = React.createClass({
   getInitialState() {
       return {
-          check: false
+        check: false
       };
   },
   componentWillMount() {
@@ -423,12 +642,12 @@ var Action = React.createClass({
         "last-answer-time": new Date()
       });
 
-      var perceptionCalculationResult = this.props.perception + this.props.perceptualImpact;
+      var perceptionCalculationResult = Number(this.props.perception) + Number(this.props.perceptualImpact);
       var perception;
       if (perceptionCalculationResult >= 1) {
         perception = 1;
       } else {
-        perception = perceptionCalculationResult;
+        perception = Number(perceptionCalculationResult);
       };
 
       database.ref('labels/' + this.props.labelKey).update({
@@ -455,6 +674,17 @@ var Action = React.createClass({
         this.setState({open: true});
       }.bind(this));
   },
+  triggerAddActionDialog(e) {
+    e.preventDefault();
+    store.dispatch(openActionEditDialog());
+  },
+  repeatPeriodMessage() {
+    if (this.props.repeatPeriod != undefined || this.props.repeatPeriod != null) {
+      return (
+        " · Repeats every " + this.props.repeatPeriod + " days"
+      )
+    } else { return ""; }
+  },
   render: function() {
     const actionListCheckbox = (
       <Checkbox
@@ -479,7 +709,10 @@ var Action = React.createClass({
         targetOrigin={{horizontal: 'right', vertical: 'top'}}
         iconStyle={{fill: grey400}}
       >
-        <MenuItem primaryText="Edit" />
+        <MenuItem
+          primaryText="Edit"
+          onTouchTap={this.triggerAddActionDialog}
+        />
         <MenuItem
           primaryText="Delete"
           onClick={this.deleteAction}
@@ -491,7 +724,13 @@ var Action = React.createClass({
         <ListItem
           leftCheckbox={actionListCheckbox}
           primaryText={this.props.children}
-          secondaryText={"Impact on perception " + this.props.perceptualImpact}
+          secondaryText={
+            "Impact on perception " +
+            this.props.perceptualImpact +
+            " · Effort " +
+            this.props.effort +
+            this.repeatPeriodMessage()
+          }
           rightIconButton={rightIconMenu}
         />
         <Divider inset={true} />
@@ -527,9 +766,7 @@ var QuestionList = React.createClass({
             lastAnswerDay = Math.round(((lastAnswerTime - first) / 1000 / 60 / 60 / 24) + .5, 0);
           };
         });
-        if ((theDay - lastAnswerDay) > daysTillRepeat) {
-          questions.push(question);
-        };
+        questions.push(question);
       }.bind(this));
       this.setState ({questions : questions});
     }.bind(this));
@@ -663,8 +900,9 @@ var QuestionButtons = React.createClass({
     }.bind(this));
   },
   onChange(e) {
+    var numericValue = Number(e.target.value);
     this.setState({
-      answer: e.target.value
+      answer: numericValue
     });
     this.databaseReference.push({
       "value": e.target.value
@@ -673,7 +911,7 @@ var QuestionButtons = React.createClass({
       "last-answer-time": new Date()
     });
     database.ref('labels/' + this.props.labelKey).update({
-      "perception": e.target.value
+      "perception": numericValue
     });
   },
   render: function() {
@@ -686,24 +924,38 @@ var QuestionButtons = React.createClass({
         >
           <RadioButton
             value="1"
-            label="Yes"
+            label="Yes (sets perception to 1)"
             style={radioStyles.radioButton}
-            labelStyle={this.state.answer == 0 ? radioStyles.radioButtonNo : null}
-            iconStyle={this.state.answer == 0 ? radioStyles.radioButtonNo : null}
+            labelStyle={this.state.answer == 0 ? radioStyles.radioButtonYes : null}
+            iconStyle={this.state.answer == 0 ? radioStyles.radioButtonYes : null}
+          />
+          <RadioButton
+            value="0.75"
+            label="Mostly (sets perception to 0.75)"
+            style={radioStyles.radioButton}
+            labelStyle={this.state.answer == 0 ? radioStyles.radioButtonYes : null}
+            iconStyle={this.state.answer == 0 ? radioStyles.radioButtonYes : null}
           />
           <RadioButton
             value="0.5"
-            label="Middle"
+            label="Middle (sets perception to 0.5)"
+            style={radioStyles.radioButton}
+            labelStyle={this.state.answer == 0.5 ? radioStyles.radioButtonSlightly : null}
+            iconStyle={this.state.answer == 0.5 ? radioStyles.radioButtonSlightly : null}
+          />
+          <RadioButton
+            value="0.25"
+            label="Not really (sets perception to 0.25)"
             style={radioStyles.radioButton}
             labelStyle={this.state.answer == 0.5 ? radioStyles.radioButtonSlightly : null}
             iconStyle={this.state.answer == 0.5 ? radioStyles.radioButtonSlightly : null}
           />
           <RadioButton
             value="0"
-            label="No"
+            label="No (sets perception to 0)"
             style={radioStyles.radioButton}
-            labelStyle={this.state.answer == 1 ? radioStyles.radioButtonYes : null}
-            iconStyle={this.state.answer == 1 ? radioStyles.radioButtonYes : null}
+            labelStyle={this.state.answer == 1 ? radioStyles.radioButtonNo : null}
+            iconStyle={this.state.answer == 1 ? radioStyles.radioButtonNo : null}
           />
         </RadioButtonGroup>
       </CardActions>
